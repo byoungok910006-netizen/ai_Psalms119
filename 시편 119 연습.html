@@ -1,0 +1,2987 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>시편 119편 AI 영어 쉐도잉 스튜디오 (1~64절) | ElevenLabs &amp; OpenAI</title>
+  <!-- Inter & Noto Sans KR Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans KR', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          colors: {
+            studio: {
+              bg: '#0b1120',
+              card: '#111827',
+              elevated: '#1e293b',
+              border: '#1f2937',
+              gold: '#fbbf24',
+              indigo: '#6366f1',
+              emerald: '#10b981',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Dark Studio Theme Base & Micro-Interactions */
+    body {
+      background-color: #0b1120;
+      color: #f1f5f9;
+      font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .studio-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .studio-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.55);
+      border-radius: 999px;
+    }
+    .studio-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: 999px;
+    }
+    .studio-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.45);
+    }
+
+    /* Gold stressed word highlight (#fbbf24) */
+    .stress-word {
+      color: #fbbf24;
+      text-shadow: 0 0 18px rgba(251, 191, 36, 0.28);
+      font-weight: 800;
+    }
+
+    /* Active Recall Blind Mask (hover on desktop, tap-to-peek on touch) */
+    .blind-masked {
+      filter: blur(10px);
+      opacity: 0.32;
+      user-select: none;
+      transition: filter 0.22s ease, opacity 0.22s ease;
+      cursor: pointer;
+    }
+    .blind-masked:hover,
+    .blind-masked:active,
+    .blind-masked.peeking {
+      filter: blur(0px);
+      opacity: 1;
+    }
+
+    /* Audio equalizer bars */
+    .eq-bars span {
+      display: inline-block;
+      width: 3px;
+      height: 5px;
+      border-radius: 999px;
+      background-color: #818cf8;
+      transition: height 0.15s ease;
+    }
+    .eq-bars.active span {
+      animation: eqWave 0.65s infinite ease-in-out alternate;
+    }
+    .eq-bars.active span:nth-child(2) { animation-delay: 0.12s; background-color: #fbbf24; }
+    .eq-bars.active span:nth-child(3) { animation-delay: 0.25s; background-color: #10b981; }
+    .eq-bars.active span:nth-child(4) { animation-delay: 0.38s; background-color: #fbbf24; }
+    .eq-bars.active span:nth-child(5) { animation-delay: 0.18s; background-color: #818cf8; }
+
+    @keyframes eqWave {
+      0% { height: 4px; }
+      100% { height: 18px; }
+    }
+
+    /* Recording pulse */
+    @keyframes recPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); }
+      50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+    }
+    .rec-pulsing {
+      animation: recPulse 1.2s infinite;
+    }
+
+    input[type="range"].studio-slider {
+      accent-color: #6366f1;
+    }
+    input[type="range"].studio-slider-gold {
+      accent-color: #fbbf24;
+    }
+    input[type="range"].studio-slider-emerald {
+      accent-color: #10b981;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-studio-bg text-slate-100 overflow-x-hidden selection:bg-amber-400/30 selection:text-amber-200">
+
+  <!-- ==================== STICKY TOP HEADER ==================== -->
+  <header class="sticky top-0 z-40 bg-studio-bg/90 backdrop-blur-md border-b border-studio-border">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 shrink-0">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4m-4 0h8" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white">시편 119편 AI 쉐도잉 스튜디오</h1>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-400 border border-amber-400/30">
+              1연~8연 · 64절 완수록
+            </span>
+            <span class="hidden md:inline-block text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
+              ElevenLabs · OpenAI TTS
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">배우급 AI 성우 + IndexedDB 스마트 캐싱 · 10회 자동 루프 · 4중 하이브리드 오디오</p>
+        </div>
+      </div>
+
+      <!-- Overall Mastery & Action Buttons -->
+      <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+        <div class="flex items-center gap-2.5 bg-studio-card border border-studio-border rounded-full px-3.5 py-1.5" title="전체 64절 10회 마스터 달성률">
+          <span class="text-xs font-semibold text-slate-400">전체 진도</span>
+          <div class="w-20 sm:w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div id="overallProgressBar" class="h-full bg-gradient-to-r from-indigo-400 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <span id="overallProgressText" class="text-xs font-bold text-emerald-400 tabular-nums">0%</span>
+          <span id="overallMasteredBadge" class="text-[11px] text-slate-400 hidden md:inline tabular-nums">(0/64절)</span>
+        </div>
+
+        <button id="openImportBtn" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-studio-card hover:bg-studio-elevated border border-slate-700 hover:border-indigo-400/60 text-xs sm:text-sm font-semibold text-slate-100 transition">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          스크립트 / URL 입력
+        </button>
+
+        <button id="openResetConfirmBtn" type="button" title="전체 학습 진도 초기화" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-studio-card hover:bg-red-500/10 border border-slate-700 hover:border-red-500/40 text-xs font-semibold text-slate-400 hover:text-red-400 transition">
+          진도 리셋
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== STANZA FILTER BAR ==================== -->
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4">
+    <div id="stanzaFilterBar" class="flex items-center gap-2 overflow-x-auto pb-2 studio-scroll" role="tablist" aria-label="시편 119편 연별 필터">
+      <!-- Dynamically rendered stanza pills (전체(64) + 1연~8연 + 커스텀) -->
+    </div>
+  </div>
+
+  <!-- ==================== MAIN TWO-COLUMN LAYOUT ==================== -->
+  <main class="max-w-[1440px] mx-auto px-4 sm:px-6 py-4 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+    <!-- LEFT COLUMN: AUDIO STUDIO + FOCUS STAGE + STAMPS/RECORDER (8 cols on desktop) -->
+    <section class="lg:col-span-8 flex flex-col gap-4 min-w-0">
+
+      <!-- 1) 4-WAY HYBRID AUDIO ENGINE CARD -->
+      <div class="bg-studio-card border border-studio-border rounded-2xl p-4 sm:p-5 shadow-xl shadow-black/35">
+        <!-- 4 Switchable Engine Tabs -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5 bg-studio-bg p-1.5 rounded-xl border border-studio-border" role="tablist">
+          <button type="button" data-engine="ai" class="engine-tab active flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-lg text-xs font-extrabold transition bg-indigo-500/20 text-indigo-300 border border-indigo-400/50 shadow">
+            <span>🎙️</span> <span class="truncate">초고음질 AI 성우</span>
+          </button>
+          <button type="button" data-engine="tts" class="engine-tab flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition border border-transparent">
+            <span>🗣️</span> <span class="truncate">무료 브라우저 TTS</span>
+          </button>
+          <button type="button" data-engine="youtube" class="engine-tab flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition border border-transparent">
+            <span>🎬</span> <span class="truncate">유튜브 미니 팝업</span>
+          </button>
+          <button type="button" data-engine="local" class="engine-tab flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition border border-transparent">
+            <span>🎧</span> <span class="truncate">내 MP3/MP4 파일</span>
+          </button>
+        </div>
+
+        <!-- ==================== TAB 1: ULTRA-HD AI VOICE (ELEVENLABS / OPENAI) ==================== -->
+        <div id="panel-ai" class="engine-panel mt-4 pt-3.5 border-t border-studio-border/80 space-y-4">
+
+          <!-- Provider Toggle + Smart Cache Status Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="inline-flex bg-studio-bg p-1 rounded-xl border border-studio-border">
+              <button id="providerElevenBtn" type="button" data-provider="elevenlabs" class="ai-provider-btn px-3.5 py-2 rounded-lg text-xs font-extrabold transition bg-indigo-500 text-white shadow">
+                🎭 ElevenLabs <span class="hidden sm:inline font-medium opacity-90">(배우급 감정·숨소리)</span>
+              </button>
+              <button id="providerOpenaiBtn" type="button" data-provider="openai" class="ai-provider-btn px-3.5 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-slate-200">
+                ✨ OpenAI TTS <span class="hidden sm:inline font-medium opacity-80">(자연스러운 고음질)</span>
+              </button>
+            </div>
+
+            <!-- Live Cache Status & Download / Clear -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="aiCacheStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                ☁️ 미생성 (첫 재생 시 1회 생성 후 캐시)
+              </span>
+              <button id="downloadAiMp3Btn" type="button" disabled title="현재 절 캐시된 MP3 다운로드" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold disabled:opacity-35 disabled:cursor-not-allowed transition">
+                ⬇ MP3 다운로드
+              </button>
+              <button id="clearAiCacheBtn" type="button" title="저장된 AI 오디오 캐시 전체 삭제" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-studio-bg hover:bg-red-500/15 border border-slate-700 hover:border-red-500/40 text-slate-400 hover:text-red-300 text-[11px] font-semibold transition">
+                캐시 초기화 <span id="aiCacheCountLabel" class="tabular-nums text-slate-500">(0)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- API Key Secure Bar -->
+          <div class="bg-studio-bg/90 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label for="aiApiKeyInput" id="aiApiKeyLabel" class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                🔑 ElevenLabs API 키
+                <span id="apiKeySavedPill" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">저장됨</span>
+              </label>
+              <button id="toggleKeyGuideBtn" type="button" class="text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 transition">
+                키 발급 방법 보기 ▾
+              </button>
+            </div>
+
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+              <div class="relative flex-1 min-w-[200px]">
+                <input id="aiApiKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="sk_... (ElevenLabs API 키를 입력하세요)" class="w-full bg-studio-card border border-slate-700 rounded-xl pl-3.5 pr-10 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-400" />
+                <button id="toggleKeyVisibilityBtn" type="button" aria-label="API 키 표시 전환" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1">
+                  <svg id="eyeIconShow" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <svg id="eyeIconHide" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                </button>
+              </div>
+              <button id="saveApiKeyBtn" type="button" class="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-extrabold transition shrink-0">
+                저장
+              </button>
+              <button id="deleteApiKeyBtn" type="button" class="px-3 py-2 rounded-xl bg-studio-card hover:bg-red-500/15 border border-slate-700 hover:border-red-500/40 text-slate-400 hover:text-red-300 text-xs font-bold transition shrink-0">
+                키 삭제
+              </button>
+            </div>
+
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              🔒 API 키는 오직 현재 브라우저의 <code class="text-slate-300">localStorage</code>에만 안전하게 보관되며 외부 서버로 유출되지 않습니다.
+            </p>
+
+            <!-- Collapsible 2-Line Key Issuance Guide -->
+            <div id="apiKeyGuideBox" class="hidden mt-2 p-3 rounded-lg bg-indigo-500/[0.08] border border-indigo-400/25 text-[11px] text-slate-300 space-y-1.5 leading-relaxed">
+              <div><strong class="text-indigo-300">① ElevenLabs:</strong> <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" class="underline hover:text-white">elevenlabs.io</a> 로그인 → 좌측 하단 프로필 → <em>Profile + API key</em>에서 키 복사 (무료 플랜 월 10,000자 제공).</div>
+              <div><strong class="text-emerald-300">② OpenAI TTS:</strong> <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="underline hover:text-white">platform.openai.com/api-keys</a> 로그인 → <em>Create new secret key</em> 생성 후 복사 (소액 크레딧 충전 후 사용).</div>
+            </div>
+          </div>
+
+          <!-- ElevenLabs Specific Controls -->
+          <div id="elevenSettingsBox" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="elevenVoiceSelect" class="block text-[11px] font-bold text-slate-400 mb-1">배우급 프리셋 성우</label>
+                <select id="elevenVoiceSelect" class="w-full bg-studio-bg border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-indigo-400">
+                  <option value="JBFqnCBsd6RMkjVDRZzb">George (영국식 중후한 배우 톤)</option>
+                  <option value="nPczCjzI2devNBz1zQrb">Brian (미국식 깊은 내레이터)</option>
+                  <option value="onwK4e9ZLuTAKqWW03F9">Daniel (영국식 차분한 낭독가)</option>
+                  <option value="21m00Tcm4TlvDq8ikWAM">Rachel (미국식 차분한 여성)</option>
+                  <option value="EXAVITQu4vr4xnSDxMaL">Sarah (부드럽고 섬세한 여성)</option>
+                  <option value="__custom__">✏️ 직접 Voice ID 입력...</option>
+                </select>
+              </div>
+              <div>
+                <label for="elevenModelSelect" class="block text-[11px] font-bold text-slate-400 mb-1">ElevenLabs 모델</label>
+                <select id="elevenModelSelect" class="w-full bg-studio-bg border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-indigo-400">
+                  <option value="eleven_multilingual_v2">eleven_multilingual_v2 (최고 감정선·숨소리)</option>
+                  <option value="eleven_turbo_v2_5">eleven_turbo_v2_5 (초저지연·저비용)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Custom Voice ID Input (only shown when __custom__ selected) -->
+            <div id="elevenCustomVoiceWrap" class="hidden">
+              <label for="elevenCustomVoiceInput" class="block text-[11px] font-bold text-amber-300 mb-1">직접 Voice ID 입력 (ElevenLabs Voice Library ID)</label>
+              <input id="elevenCustomVoiceInput" type="text" placeholder="예: pNInz6obpgDQGcFmaJgB" class="w-full bg-studio-bg border border-amber-400/40 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-amber-400" />
+            </div>
+
+            <!-- Stability & Style Sliders -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-studio-bg/70 border border-slate-800 rounded-xl p-3">
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="font-bold text-slate-300">안정성 (Stability) <span class="text-slate-500 font-normal">낮을수록 감정 풍부</span></span>
+                  <span id="elevenStabilityVal" class="font-mono font-bold text-amber-400 tabular-nums">0.45</span>
+                </div>
+                <input id="elevenStabilitySlider" type="range" min="0.10" max="0.95" step="0.05" value="0.45" class="studio-slider-gold w-full cursor-pointer" />
+              </div>
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="font-bold text-slate-300">스타일 강도 (Style) <span class="text-slate-500 font-normal">연기 표현력</span></span>
+                  <span id="elevenStyleVal" class="font-mono font-bold text-indigo-400 tabular-nums">0.35</span>
+                </div>
+                <input id="elevenStyleSlider" type="range" min="0.00" max="1.00" step="0.05" value="0.35" class="studio-slider w-full cursor-pointer" />
+              </div>
+            </div>
+          </div>
+
+          <!-- OpenAI TTS Specific Controls -->
+          <div id="openaiSettingsBox" class="hidden space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="openaiModelSelect" class="block text-[11px] font-bold text-slate-400 mb-1">OpenAI TTS 모델</label>
+                <select id="openaiModelSelect" class="w-full bg-studio-bg border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-indigo-400">
+                  <option value="gpt-4o-mini-tts">gpt-4o-mini-tts (감정·연기 지시문 지원 · 기본)</option>
+                  <option value="tts-1-hd">tts-1-hd (고음질 스튜디오)</option>
+                  <option value="tts-1">tts-1 (빠른 응답·저비용)</option>
+                </select>
+              </div>
+              <div>
+                <label for="openaiVoiceSelect" class="block text-[11px] font-bold text-slate-400 mb-1">성우 목소리</label>
+                <select id="openaiVoiceSelect" class="w-full bg-studio-bg border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-indigo-400">
+                  <option value="onyx">onyx (묵직한 남성 배우)</option>
+                  <option value="fable">fable (표현력 풍부한 영국풍)</option>
+                  <option value="echo">echo (따뜻한 남성)</option>
+                  <option value="nova">nova (부드러운 여성)</option>
+                  <option value="shimmer">shimmer (맑은 여성)</option>
+                  <option value="ash">ash (깊고 차분한 톤)</option>
+                  <option value="sage">sage (지적이고 안정된 톤)</option>
+                  <option value="alloy">alloy (균형 잡힌 중성 톤)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Acting Instructions (gpt-4o-mini-tts) -->
+            <div id="openaiInstructionsWrap" class="space-y-2 bg-studio-bg/70 border border-slate-800 rounded-xl p-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label for="openaiInstructionsInput" class="text-[11px] font-bold text-slate-300">🎬 연기 톤 지시문 (Instructions · gpt-4o-mini-tts 전용)</label>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <button type="button" data-tone="actor" class="tone-preset-btn px-2 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/35 border border-indigo-400/35 text-indigo-200 text-[11px] font-bold transition">연극배우 낭독</button>
+                  <button type="button" data-tone="meditation" class="tone-preset-btn px-2 py-1 rounded-lg bg-studio-card hover:bg-studio-elevated border border-slate-700 text-slate-300 text-[11px] font-semibold transition">차분한 묵상</button>
+                  <button type="button" data-tone="teacher" class="tone-preset-btn px-2 py-1 rounded-lg bg-studio-card hover:bg-studio-elevated border border-slate-700 text-slate-300 text-[11px] font-semibold transition">명확한 영어 교사</button>
+                </div>
+              </div>
+              <textarea id="openaiInstructionsInput" rows="2" class="w-full bg-studio-card border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 leading-relaxed focus:outline-none focus:border-indigo-400">Read like a seasoned theatrical actor reciting a solemn, heartfelt psalm with natural breathing, warm resonance, and meaningful pauses.</textarea>
+              <p id="openaiInstructionsNote" class="hidden text-[11px] text-amber-400/85">* 현재 선택된 모델은 지시문을 지원하지 않습니다. 감정 연출을 쓰려면 <strong>gpt-4o-mini-tts</strong>를 선택하세요.</p>
+            </div>
+          </div>
+
+          <!-- Shared AI Playback Speed Control (Live, Zero Re-billing) -->
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-studio-bg/80 border border-slate-800 rounded-xl px-3.5 py-2.5">
+            <span class="text-xs font-semibold text-slate-300">⚡ 실시간 재생 배속 <span class="text-[11px] text-slate-500 font-normal">(API 재호출 없이 즉시 반영)</span></span>
+            <div class="flex items-center gap-2.5">
+              <input id="aiSpeedSlider" type="range" min="0.6" max="1.2" step="0.05" value="1.0" class="studio-slider-emerald w-28 sm:w-36 cursor-pointer" />
+              <span id="aiSpeedLabel" class="text-xs font-extrabold text-emerald-400 tabular-nums w-11 text-right">1.00x</span>
+            </div>
+          </div>
+
+          <!-- Graceful Error Banner + 1-Click Fallback to Browser TTS -->
+          <div id="aiErrorBanner" class="hidden bg-red-500/10 border border-red-500/40 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-0.5">
+              <div class="text-xs font-extrabold text-red-300" id="aiErrorTitle">API 키가 설정되지 않았습니다</div>
+              <p class="text-[11px] text-red-200/85 leading-relaxed" id="aiErrorDesc">위 입력창에 API 키를 입력해 저장하거나, 무료 브라우저 자연 억양 TTS로 바로 연습할 수 있습니다.</p>
+            </div>
+            <button id="fallbackToBrowserTtsBtn" type="button" class="shrink-0 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold transition">
+              🗣️ 무료 브라우저 TTS로 전환
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 2: FREE BROWSER TTS (EDGE NATURAL) ==================== -->
+        <div id="panel-tts" class="engine-panel hidden mt-4 pt-3.5 border-t border-studio-border/80 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5 flex-wrap flex-1 min-w-[220px]">
+              <label for="voiceSelect" class="text-xs font-semibold text-slate-400 whitespace-nowrap">성우 음성 선택</label>
+              <select id="voiceSelect" class="flex-1 min-w-[200px] max-w-sm bg-studio-bg border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:border-indigo-400">
+                <option value="">음성 탐색 중...</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-3">
+              <label for="ttsSpeedSlider" class="text-xs font-semibold text-slate-400 whitespace-nowrap">배속</label>
+              <input id="ttsSpeedSlider" type="range" min="0.6" max="1.2" step="0.05" value="0.90" class="studio-slider w-28 sm:w-36 cursor-pointer" />
+              <span id="ttsSpeedLabel" class="text-xs font-bold text-indigo-400 tabular-nums w-11 text-right">0.90x</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2 bg-indigo-500/[0.08] border border-indigo-400/25 rounded-xl px-3 py-2.5 text-[11px] text-indigo-200/90 leading-relaxed">
+            <span class="shrink-0 font-extrabold text-amber-400">💡 Edge Natural 팁:</span>
+            <span>Microsoft Edge 브라우저로 열면 <strong>Microsoft Andrew / Brian / Ava Online (Natural)</strong> 등 무료 고품질 신경망 성우가 자동 최우선 정렬됩니다. 구두점(<code>, ; .</code>) 호흡 단위로 높낮이와 속도 강약을 자동 적용합니다.</span>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 3: YOUTUBE MINI POPUP + PACER ==================== -->
+        <div id="panel-youtube" class="engine-panel hidden mt-4 pt-3.5 border-t border-studio-border/80 space-y-3">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            <div class="relative flex-1">
+              <input id="youtubeUrlInput" type="text" placeholder="유튜브 주소 붙여넣기 (예: https://www.youtube.com/watch?v=...)" class="w-full bg-studio-bg border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400" />
+              <span id="ytParsedBadge" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">ID 인식됨</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="openYtPopupBtn" type="button" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/40 text-amber-300 text-xs sm:text-sm font-bold transition">
+                <span>🪟</span> 미니 팝업 (<span id="ytSecBadge" class="tabular-nums">0초</span>부터)
+              </button>
+              <a id="ytFallbackLink" href="https://www.youtube.com/results?search_query=Psalm+119+NIV+Max+McLean" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1 px-3.5 py-2.5 rounded-xl bg-studio-bg hover:bg-studio-elevated border border-slate-700 text-slate-300 text-xs sm:text-sm font-semibold transition">
+                새 탭 ↗
+              </a>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+            <span class="font-bold text-slate-300">🎬 실제 성우 추천 검색:</span>
+            <a href="https://www.youtube.com/results?search_query=Psalm+119+NIV+Max+McLean" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-studio-bg hover:bg-studio-elevated border border-slate-700 text-amber-300 font-semibold transition">Psalm 119 NIV Max McLean (미국식) ↗</a>
+            <a href="https://www.youtube.com/results?search_query=Psalm+119+NIV+David+Suchet" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-studio-bg hover:bg-studio-elevated border border-slate-700 text-indigo-300 font-semibold transition">Psalm 119 NIV David Suchet (영국식) ↗</a>
+          </div>
+
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            * 샌드박스 임베드 오류 없이 안전한 독립 미니 창으로 현재 절의 시작 초(<code>&amp;t=</code>)부터 열립니다. 아래 <strong>10회 자동 루프</strong>로 화면 내 쉐도잉 페이서 타이머를 동기화해 연습하세요.
+          </p>
+        </div>
+
+        <!-- ==================== TAB 4: LOCAL MP3/MP4 FILE PLAYER ==================== -->
+        <div id="panel-local" class="engine-panel hidden mt-4 pt-3.5 border-t border-studio-border/80 space-y-3">
+          <div id="mediaDropzone" class="border-2 border-dashed border-slate-700 hover:border-emerald-400/60 bg-studio-bg/60 rounded-xl p-4 text-center cursor-pointer transition">
+            <input id="mediaFileInput" type="file" accept=".mp3,.wav,.m4a,.mp4,audio/*,video/*" class="hidden" />
+            <div class="text-sm font-bold text-slate-200">📁 내 MP3 / WAV / M4A / MP4 파일 드래그 앤 드롭 또는 클릭</div>
+            <div id="localFileStatus" class="text-xs text-slate-400 mt-1">연결된 파일 없음 · 불러오면 현재 절 타임스탬프 구간을 원음으로 반복 재생합니다.</div>
+          </div>
+
+          <video id="localVideoEl" class="hidden w-full max-h-48 rounded-xl bg-black border border-studio-border" controls></video>
+          <audio id="localAudioEl" class="hidden"></audio>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-studio-bg border border-studio-border rounded-xl px-3.5 py-2.5">
+            <!-- Playback Speed (0.5x ~ 1.2x) -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-400">배속</span>
+              <input id="localSpeedSlider" type="range" min="0.5" max="1.2" step="0.05" value="1.0" class="studio-slider-emerald w-24 cursor-pointer" />
+              <span id="localSpeedLabel" class="text-xs font-bold text-emerald-400 tabular-nums w-10">1.00x</span>
+            </div>
+
+            <!-- Start Nudge -->
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-semibold text-slate-400">시작</span>
+              <button type="button" data-nudge="start" data-delta="-0.3" class="nudge-btn px-2 py-1 rounded-lg bg-studio-elevated hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-300">-0.3s</button>
+              <span id="startOffsetLabel" class="text-xs font-mono font-bold text-amber-400 min-w-[44px] text-center">0.0s</span>
+              <button type="button" data-nudge="start" data-delta="0.3" class="nudge-btn px-2 py-1 rounded-lg bg-studio-elevated hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-300">+0.3s</button>
+            </div>
+
+            <!-- End Nudge -->
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-semibold text-slate-400">종료</span>
+              <button type="button" data-nudge="end" data-delta="-0.3" class="nudge-btn px-2 py-1 rounded-lg bg-studio-elevated hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-300">-0.3s</button>
+              <span id="endOffsetLabel" class="text-xs font-mono font-bold text-amber-400 min-w-[44px] text-center">0.0s</span>
+              <button type="button" data-nudge="end" data-delta="0.3" class="nudge-btn px-2 py-1 rounded-lg bg-studio-elevated hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-300">+0.3s</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2) MAIN SENTENCE FOCUS STAGE -->
+      <div class="bg-studio-card border border-studio-border rounded-2xl p-5 sm:p-6 shadow-xl shadow-black/35">
+        <!-- Stage Top Meta + Active Recall Blind Toggles -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="stageVerseBadge" class="px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 text-xs font-extrabold tracking-tight">시편 119:1</span>
+            <span id="stageStanzaTitle" class="text-xs sm:text-sm font-semibold text-slate-300">1연 알레프 (Aleph א · 1~8절)</span>
+            <span id="stageTimeBadge" class="px-2 py-0.5 rounded-md bg-studio-bg border border-studio-border text-[11px] font-mono text-slate-400 tabular-nums">0.0s – 6.2s</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="toggleBlindEnBtn" type="button" class="px-3 py-1.5 rounded-full text-xs font-bold bg-studio-bg border border-slate-700 text-slate-300 hover:border-amber-400/50 transition flex items-center gap-1.5">
+              <span>👁️</span> 영어 가리기
+            </button>
+            <button id="toggleBlindKoBtn" type="button" class="px-3 py-1.5 rounded-full text-xs font-bold bg-studio-bg border border-slate-700 text-slate-300 hover:border-amber-400/50 transition flex items-center gap-1.5">
+              <span>👁️</span> 해석 가리기
+            </button>
+          </div>
+        </div>
+
+        <!-- Sentence Text Box -->
+        <div class="bg-gradient-to-b from-slate-900/95 to-studio-bg/95 border border-slate-800 rounded-2xl p-5 sm:p-7 space-y-4">
+          <!-- English Verse with Gold Stressed Words -->
+          <div>
+            <div id="enTextDisplay" class="text-xl sm:text-2xl md:text-[1.7rem] font-bold leading-relaxed tracking-tight text-slate-100"></div>
+            <div id="blindEnHint" class="hidden text-[11px] text-amber-400/80 mt-1">마우스를 올리거나 터치하면 영어 원문이 살짝 보입니다.</div>
+          </div>
+
+          <!-- Native Pronunciation / Linking / Rhythm Guide -->
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2.5 bg-emerald-500/[0.08] border border-emerald-500/25 rounded-xl p-3.5">
+            <span class="inline-block self-start px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-[11px] font-extrabold whitespace-nowrap">연음·리듬 가이드</span>
+            <p id="guideTextDisplay" class="text-xs sm:text-sm font-medium text-emerald-100/95 leading-relaxed"></p>
+          </div>
+
+          <!-- Natural Korean Translation -->
+          <div class="pt-1 border-t border-slate-800/80">
+            <p id="koTextDisplay" class="text-sm sm:text-base text-slate-300 leading-relaxed font-medium"></p>
+            <div id="blindKoHint" class="hidden text-[11px] text-amber-400/80 mt-1">마우스를 올리거나 터치하면 한국어 해석이 살짝 보입니다.</div>
+          </div>
+        </div>
+
+        <!-- Live Pacer & Visual Countdown Bar -->
+        <div class="mt-4 bg-studio-bg border border-studio-border rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div id="eqBars" class="eq-bars flex items-center gap-[3px] h-5 shrink-0">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span id="pacerStatusText" class="text-xs sm:text-sm font-semibold text-slate-300 truncate">준비됨 · 듣기(Space) 또는 10회 자동 루프(R)를 시작하세요</span>
+          </div>
+
+          <div class="flex items-center gap-3 flex-1 sm:flex-initial min-w-[200px] sm:w-64">
+            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div id="pacerProgressFill" class="h-full bg-gradient-to-r from-amber-400 via-indigo-400 to-emerald-400 transition-all duration-75" style="width: 0%"></div>
+            </div>
+            <span id="pacerRepText" class="text-xs font-extrabold text-amber-400 tabular-nums whitespace-nowrap">0 / 10회</span>
+          </div>
+        </div>
+
+        <!-- Primary Action Controls -->
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button id="playOnceBtn" type="button" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/25 transition">
+              <svg id="playOnceIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <span id="playOnceLabel">1회 듣기</span>
+            </button>
+
+            <button id="autoLoopBtn" type="button" class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/45 text-amber-300 font-extrabold text-sm transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <polyline points="17 1 21 5 17 9" />
+                <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                <polyline points="7 23 3 19 7 15" />
+                <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+              </svg>
+              <span id="autoLoopLabel">10회 자동 루프</span>
+            </button>
+
+            <select id="loopModeSelect" aria-label="10회 루프 방식" class="bg-studio-bg border border-slate-700 rounded-xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-200 focus:outline-none focus:border-amber-400">
+              <option value="repeat">듣고 따라하기 (휴지 카운트)</option>
+              <option value="shadow">동시 쉐도잉 (0.8초 간격)</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="prevVerseBtn" type="button" class="px-4 py-3 rounded-xl bg-studio-elevated hover:bg-slate-700 border border-slate-700 text-xs sm:text-sm font-bold text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
+              ← 이전 절
+            </button>
+            <button id="nextVerseBtn" type="button" class="px-4 py-3 rounded-xl bg-studio-elevated hover:bg-slate-700 border border-slate-700 text-xs sm:text-sm font-bold text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
+              다음 절 →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3) BOTTOM DUAL CARDS: 10-REP STAMPS & VOICE RECORDER -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <!-- 10-Rep Stamp Tracker (7 cols) -->
+        <div class="md:col-span-7 bg-studio-card border border-studio-border rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/25">
+          <div class="flex items-center justify-between gap-2 mb-3">
+            <h2 class="text-xs sm:text-sm font-bold text-slate-200">🎯 10회 체화 스탬프 <span class="text-slate-500 font-normal">(클릭해 직접 체크)</span></h2>
+            <span id="verseStampSummary" class="text-xs font-extrabold text-emerald-400 tabular-nums">0 / 10 완료</span>
+          </div>
+
+          <div id="stampGrid" class="grid grid-cols-10 gap-1.5 sm:gap-2 mb-3.5"></div>
+
+          <div class="flex items-center gap-2">
+            <button id="addStampBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500/15 hover:bg-emerald-500 hover:text-slate-950 border border-emerald-500/40 text-emerald-300 font-extrabold text-xs sm:text-sm transition">
+              ✓ +1회 완료 체크 (Enter)
+            </button>
+            <button id="clearVerseStampBtn" type="button" class="py-2.5 px-3.5 rounded-xl bg-studio-bg hover:bg-studio-elevated border border-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold transition">
+              초기화
+            </button>
+          </div>
+        </div>
+
+        <!-- Voice Recorder & Compare (5 cols) -->
+        <div class="md:col-span-5 bg-studio-card border border-studio-border rounded-2xl p-4 sm:p-5 shadow-lg shadow-black/25 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <h2 class="text-xs sm:text-sm font-bold text-slate-200">🎤 내 발음 녹음 &amp; 비교</h2>
+              <span id="recTimerDisplay" class="text-xs font-mono font-bold text-slate-400 tabular-nums">00:00</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="recordBtn" type="button" class="flex-1 min-w-[100px] py-2.5 px-3 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-300 font-extrabold text-xs transition flex items-center justify-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-400 inline-block"></span>
+                <span id="recordBtnLabel">녹음 시작</span>
+              </button>
+              <button id="playRecBtn" type="button" disabled class="py-2.5 px-3 rounded-xl bg-studio-bg hover:bg-studio-elevated border border-slate-700 text-slate-200 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed transition">
+                ▶ 내 발음
+              </button>
+              <button id="compareRecBtn" type="button" disabled class="w-full py-2.5 px-3 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-400/40 text-indigo-300 text-xs font-extrabold disabled:opacity-40 disabled:cursor-not-allowed transition">
+                ⇄ 원음 → 내 발음 연속 비교
+              </button>
+            </div>
+          </div>
+          <p id="recHintText" class="text-[11px] text-slate-400 mt-3 leading-snug">
+            AI 성우나 원음을 들은 뒤 내 목소리를 녹음해 억양·숨소리를 즉시 비교해 보세요.
+          </p>
+        </div>
+      </div>
+
+      <!-- Keyboard Shortcuts Bar -->
+      <div class="hidden sm:flex items-center justify-center flex-wrap gap-x-5 gap-y-2 text-[11px] text-slate-500 pt-1 pb-2">
+        <span><kbd class="px-1.5 py-0.5 rounded bg-studio-card border border-slate-700 text-slate-300 font-mono">Space</kbd> 듣기 / 정지</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-studio-card border border-slate-700 text-slate-300 font-mono">R</kbd> 10회 자동 루프</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-studio-card border border-slate-700 text-slate-300 font-mono">Enter</kbd> +1회 스탬프</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-studio-card border border-slate-700 text-slate-300 font-mono">←</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-studio-card border border-slate-700 text-slate-300 font-mono">→</kbd> 이전 · 다음 절</span>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: SCROLLABLE VERSE LIST & STANZA PROGRESS (4 cols on desktop) -->
+    <aside class="lg:col-span-4 bg-studio-card border border-studio-border rounded-2xl p-4 shadow-xl shadow-black/35 lg:sticky lg:top-[76px] flex flex-col max-h-[600px] lg:max-h-[calc(100vh-100px)]">
+      <div class="pb-3 mb-3 border-b border-studio-border space-y-2.5">
+        <div class="flex items-center justify-between gap-2">
+          <h2 id="sidebarStanzaHeading" class="text-sm font-extrabold text-white truncate">1연 알레프 (Aleph א · 1~8절)</h2>
+          <span id="sidebarVerseCount" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 tabular-nums shrink-0">8절</span>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between text-[11px] mb-1">
+            <span class="text-slate-400 font-medium">현재 선택 구역 마스터 진도</span>
+            <span id="stanzaProgressText" class="text-indigo-400 font-bold tabular-nums">0%</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div id="stanzaProgressBar" class="h-full bg-gradient-to-r from-indigo-400 to-amber-400 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="verseListContainer" class="flex-1 overflow-y-auto studio-scroll space-y-1.5 pr-1"></div>
+    </aside>
+  </main>
+
+  <!-- ==================== IMPORT SCRIPT / URL MODAL ==================== -->
+  <div id="importModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-studio-card border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto studio-scroll p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-studio-border pb-3">
+        <div>
+          <h3 class="text-base sm:text-lg font-extrabold text-white">스크립트 / 유튜브 URL 추가 입력</h3>
+          <p class="text-xs text-slate-400 mt-0.5">유튜브 자막이나 시편 119편 추가 구절(65~176절)을 붙여넣으면 대소문자·구두점 복원 및 강세 하이라이트를 자동 생성합니다.</p>
+        </div>
+        <button id="closeImportModalBtn" type="button" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-lg">✕</button>
+      </div>
+
+      <div>
+        <label for="modalYtUrl" class="block text-xs font-bold text-slate-300 mb-1.5">유튜브 URL (선택 입력)</label>
+        <input id="modalYtUrl" type="text" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-studio-bg border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-400" />
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <label for="modalScriptArea" class="text-xs font-bold text-slate-300">타임스탬프 자막 또는 영어 구절 붙여넣기</label>
+          <select id="importTargetMode" class="bg-studio-bg border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200">
+            <option value="append">기존 64절 뒤에 추가 (커스텀 챕터)</option>
+            <option value="replace">새 스크립트로 전체 교체</option>
+          </select>
+        </div>
+        <textarea id="modalScriptArea" rows="7" placeholder="예시 1 (타임스탬프 포함):&#10;0:00 do good to your servant according to your word lord&#10;0:06 teach me knowledge and good judgment for i trust your commands&#10;&#10;예시 2 (일반 문장 / 절 번호 포함):&#10;65. Do good to your servant according to your word, Lord.&#10;66. Teach me knowledge and good judgment, for I trust your commands." class="w-full bg-studio-bg border border-slate-700 rounded-xl p-3.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 leading-relaxed focus:outline-none focus:border-indigo-400"></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-studio-border">
+        <button id="restoreDefaultDataBtn" type="button" class="px-3.5 py-2 rounded-xl bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/35 text-amber-300 text-xs font-bold transition">
+          기본 64절(1~8연) 데이터로 복원
+        </button>
+        <div class="flex items-center gap-2">
+          <button id="cancelImportModalBtn" type="button" class="px-4 py-2 rounded-xl bg-studio-bg hover:bg-studio-elevated border border-slate-700 text-xs font-bold text-slate-300 transition">취소</button>
+          <button id="applyImportBtn" type="button" class="px-5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs sm:text-sm font-extrabold transition">자동 파싱 &amp; 적용</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== RESET CONFIRMATION MODAL (No confirm()) ==================== -->
+  <div id="resetModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-studio-card border border-slate-700 rounded-2xl w-full max-w-md p-5 sm:p-6 shadow-2xl space-y-4">
+      <h3 class="text-base font-extrabold text-white">학습 진도를 초기화할까요?</h3>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        모든 구절의 1~10회 체크 스탬프와 타임스탬프 미세 조절값이 초기화됩니다. (저장된 API 키와 AI 오디오 캐시는 유지됩니다.)
+      </p>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button id="cancelResetBtn" type="button" class="px-4 py-2 rounded-xl bg-studio-bg hover:bg-studio-elevated border border-slate-700 text-xs font-bold text-slate-300 transition">취소</button>
+        <button id="confirmResetBtn" type="button" class="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-400 text-white text-xs font-extrabold transition">초기화 실행</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toastEl" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-200 bg-studio-elevated border border-slate-600 text-slate-100 px-4 py-3 rounded-xl shadow-2xl text-xs sm:text-sm font-semibold max-w-sm"></div>
+
+  <!-- ==================== APPLICATION LOGIC ==================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* =========================================================================
+       * 1. STANZA METADATA & COMPLETE 64-VERSE PSALM 119 DATASET (v.1 ~ v.64)
+       * ========================================================================= */
+      const STANZAS = [
+        { num: 1, shortLabel: '1연 알레프(1-8)', fullTitle: '1연 알레프 (Aleph א · 1~8절)' },
+        { num: 2, shortLabel: '2연 베트(9-16)', fullTitle: '2연 베트 (Beth ב · 9~16절)' },
+        { num: 3, shortLabel: '3연 기멜(17-24)', fullTitle: '3연 기멜 (Gimel ג · 17~24절)' },
+        { num: 4, shortLabel: '4연 달레트(25-32)', fullTitle: '4연 달레트 (Daleth ד · 25~32절)' },
+        { num: 5, shortLabel: '5연 헤(33-40)', fullTitle: '5연 헤 (He ה · 33~40절)' },
+        { num: 6, shortLabel: '6연 바우(41-48)', fullTitle: '6연 바우 (Vav ו · 41~48절)' },
+        { num: 7, shortLabel: '7연 자인(49-56)', fullTitle: '7연 자인 (Zayin ז · 49~56절)' },
+        { num: 8, shortLabel: '8연 헤트(57-64)', fullTitle: '8연 헤트 (Heth ח · 57~64절)' }
+      ];
+
+      const DEFAULT_VERSES = [
+        /* ---------- Chapter 1: 1연 알레프 (Aleph א · 1~8절) ---------- */
+        {
+          id: 1, stanza: 1, start: 0.0, end: 6.2,
+          en: '*Blessed* are those whose *ways* are *blameless*, who *walk* according to the *law* of the *Lord*.',
+          ko: '행위가 온전하여 여호와의 율법을 따라 행하는 자들은 복이 있음이여',
+          guide: 'Blessed are [블레시더] · ways are [웨이저] · according to the [어코딩 투 더] · law of the [로 오브 더]'
+        },
+        {
+          id: 2, stanza: 1, start: 6.2, end: 12.0,
+          en: '*Blessed* are those who *keep* his *statutes* and *seek* him with *all* their *heart*—',
+          ko: '여호와의 증거들을 지키고 전심으로 여호와를 구하는 자는 복이 있도다',
+          guide: 'keep his [키피즈] · seek him [씨킴] · with all their [위돌 데어]'
+        },
+        {
+          id: 3, stanza: 1, start: 12.0, end: 17.0,
+          en: 'they do *no* *wrong* but *follow* his *ways*.',
+          ko: '참으로 그들은 불의를 행하지 아니하고 주의 도를 행하는도다',
+          guide: 'do no wrong [두 노우 롱] · but follow his [벗 팔로우이즈]'
+        },
+        {
+          id: 4, stanza: 1, start: 17.0, end: 22.4,
+          en: 'You have *laid* *down* *precepts* that are to be *fully* *obeyed*.',
+          ko: '주께서 명령하사 주의 법도를 잘 지키게 하셨나이다',
+          guide: 'You have [유브] · laid down [레이드 다운] · that are to be [대러 터 비]'
+        },
+        {
+          id: 5, stanza: 1, start: 22.4, end: 28.0,
+          en: '*Oh*, that my *ways* were *steadfast* in *obeying* your *decrees*!',
+          ko: '내 길을 굳게 정하사 주의 율례를 지키게 하소서',
+          guide: 'that my [댓 마이] · steadfast in [스테드패스틴] · obeying your [오베이잉 유어]'
+        },
+        {
+          id: 6, stanza: 1, start: 28.0, end: 33.8,
+          en: 'Then I would *not* be *put* to *shame* when I *consider* *all* your *commands*.',
+          ko: '내가 주의 모든 계명에 주의할 때에는 부끄럽지 아니하리이다',
+          guide: 'put to shame [풋 투 셰임] · when I [웨나이] · all your [올 유어]'
+        },
+        {
+          id: 7, stanza: 1, start: 33.8, end: 39.6,
+          en: 'I will *praise* you with an *upright* *heart* as I *learn* your *righteous* *laws*.',
+          ko: '내가 주의 의로운 판단을 배울 때에는 정직한 마음으로 주께 감사하리이다',
+          guide: 'with an upright [위던 업라잇] · as I learn [애자이 런]'
+        },
+        {
+          id: 8, stanza: 1, start: 39.6, end: 44.8,
+          en: 'I will *obey* your *decrees*; do *not* *utterly* *forsake* me.',
+          ko: '내가 주의 율례들을 지키오리니 나를 아주 버리지 마옵소서',
+          guide: 'I will obey [아일 오베이] · not utterly [낫 어털리] · forsake me [포세이크 미]'
+        },
+
+        /* ---------- Chapter 2: 2연 베트 (Beth ב · 9~16절) ---------- */
+        {
+          id: 9, stanza: 2, start: 44.8, end: 51.4,
+          en: '*How* can a *young* *person* *stay* on the *path* of *purity*? By *living* according to your *word*.',
+          ko: '청년이 무엇으로 그의 행실을 깨끗하게 하리이까 주의 말씀만 지킬 따름이니이다',
+          guide: 'How can a [하우 캐너] · stay on the [스테이 온 더] · path of purity [패쓰 오브 퓨어리티]'
+        },
+        {
+          id: 10, stanza: 2, start: 51.4, end: 57.2,
+          en: 'I *seek* you with *all* my *heart*; do *not* let me *stray* from your *commands*.',
+          ko: '내가 전심으로 주를 찾았사오니 주의 계명에서 떠나지 말게 하소서',
+          guide: 'with all my [위돌 마이] · let me stray [렛 미 스트레이] · from your [프럼 유어]'
+        },
+        {
+          id: 11, stanza: 2, start: 57.2, end: 63.0,
+          en: 'I have *hidden* your *word* in my *heart* that I might *not* *sin* against you.',
+          ko: '내가 주께 범죄하지 아니하려 하여 주의 말씀을 내 마음에 두었나이다',
+          guide: 'I have hidden [아이브 히든] · word in my [워딘 마이] · that I might [대라이 마잇] · sin against [시너겐스트]'
+        },
+        {
+          id: 12, stanza: 2, start: 63.0, end: 68.0,
+          en: '*Praise* be to you, *Lord*; *teach* me your *decrees*.',
+          ko: '찬송을 받으실 주 여호와여 주의 율례들을 내게 가르치소서',
+          guide: 'Praise be to you [프레이즈 비 투 유] · teach me your [티치 미 유어]'
+        },
+        {
+          id: 13, stanza: 2, start: 68.0, end: 73.8,
+          en: 'With my *lips* I *recount* *all* the *laws* that *come* from your *mouth*.',
+          ko: '주의 입의 모든 규례들을 나의 입술로 선포하였으며',
+          guide: 'lips I recount [립사이 리카운트] · all the laws [올 더 로즈] · come from your [컴 프럼 유어]'
+        },
+        {
+          id: 14, stanza: 2, start: 73.8, end: 79.8,
+          en: 'I *rejoice* in *following* your *statutes* as one *rejoices* in *great* *riches*.',
+          ko: '내가 모든 재물을 즐거워함 같이 주의 증거들의 도를 즐거워하였나이다',
+          guide: 'rejoice in [리조이신] · as one rejoices [애즈 원 리조이시즈] · in great riches [인 그레잇 리치즈]'
+        },
+        {
+          id: 15, stanza: 2, start: 79.8, end: 85.0,
+          en: 'I *meditate* on your *precepts* and *consider* your *ways*.',
+          ko: '내가 주의 법도들을 작은 소리로 읊조리며 주의 길들에 주의하며',
+          guide: 'meditate on [메디테이론] · and consider [앤 컨시더]'
+        },
+        {
+          id: 16, stanza: 2, start: 85.0, end: 90.4,
+          en: 'I *delight* in your *decrees*; I will *not* *neglect* your *word*.',
+          ko: '주의 율례들을 즐거워하며 주의 말씀을 잊지 아니하리이다',
+          guide: 'delight in [딜라이틴] · I will not [아일 낫] · neglect your [니글렉츄어]'
+        },
+
+        /* ---------- Chapter 3: 3연 기멜 (Gimel ג · 17~24절) ---------- */
+        {
+          id: 17, stanza: 3, start: 90.4, end: 96.2,
+          en: 'Be *good* to your *servant* while I *live*, that I may *obey* your *word*.',
+          ko: '주의 종을 후대하여 살게 하소서 그리하시면 주의 말씀을 지키리이다',
+          guide: 'good to your [굿 투 유어] · while I live [와일라이 리브] · that I may [대라이 메이]'
+        },
+        {
+          id: 18, stanza: 3, start: 96.2, end: 102.0,
+          en: '*Open* my *eyes* that I may *see* *wonderful* *things* in your *law*.',
+          ko: '내 눈을 열어서 주의 율법에서 놀라운 것을 보게 하소서',
+          guide: 'Open my eyes [오픈 마이 아이즈] · that I may see [대라이 메이 씨] · things in [띵진]'
+        },
+        {
+          id: 19, stanza: 3, start: 102.0, end: 107.6,
+          en: 'I am a *stranger* on *earth*; do *not* *hide* your *commands* from me.',
+          ko: '나는 땅에서 나그네가 되었사오니 주의 계명들을 내게 숨기지 마소서',
+          guide: 'I am a [아이머] · stranger on earth [스트레인저 론 어쓰] · hide your [하이듀어]'
+        },
+        {
+          id: 20, stanza: 3, start: 107.6, end: 113.4,
+          en: 'My *soul* is *consumed* with *longing* for your *laws* at *all* *times*.',
+          ko: '주의 규례들을 항상 사모함으로 내 마음이 상하나이다',
+          guide: 'soul is consumed [소울리즈 컨숨드] · at all times [애톨 타임즈]'
+        },
+        {
+          id: 21, stanza: 3, start: 113.4, end: 119.8,
+          en: 'You *rebuke* the *arrogant*, who are *accursed*, those who *stray* from your *commands*.',
+          ko: '교만하여 저주를 받으며 주의 계명들에서 떠나는 자들을 주께서 꾸짖으셨나이다',
+          guide: 'rebuke the arrogant [리뷰크 디 애러건트] · who are accursed [후 아 어커시드] · stray from your [스트레이 프럼 유어]'
+        },
+        {
+          id: 22, stanza: 3, start: 119.8, end: 125.6,
+          en: '*Remove* from me their *scorn* and *contempt*, for I *keep* your *statutes*.',
+          ko: '내가 주의 교훈들을 지켰사오니 비방과 멸시를 내게서 떠나게 하소서',
+          guide: 'Remove from me [리무브 프럼 미] · scorn and contempt [스콘 앤 컨템트] · for I keep [포라이 킵]'
+        },
+        {
+          id: 23, stanza: 3, start: 125.6, end: 132.2,
+          en: 'Though *rulers* *sit* together and *slander* me, your *servant* will *meditate* on your *decrees*.',
+          ko: '고관들도 앉아서 나를 비방하였사오나 주의 종은 주의 율례들을 작은 소리로 읊조렸나이다',
+          guide: 'sit together [씻 투게더] · slander me [슬랜더 미] · meditate on [메디테이론]'
+        },
+        {
+          id: 24, stanza: 3, start: 132.2, end: 137.4,
+          en: 'Your *statutes* are my *delight*; they are my *counselors*.',
+          ko: '주의 증거들은 나의 즐거움이요 나의 충고자니이다',
+          guide: 'statutes are [스태츄차] · they are my [데어 마이]'
+        },
+
+        /* ---------- Chapter 4: 4연 달레트 (Daleth ד · 25~32절) ---------- */
+        {
+          id: 25, stanza: 4, start: 137.4, end: 143.4,
+          en: 'I am *laid* *low* in the *dust*; *preserve* my *life* according to your *word*.',
+          ko: '내 영혼이 진토에 붙었사오니 주의 말씀대로 나를 살아나게 하소서',
+          guide: 'I am laid low [아임 레이드 로우] · in the dust [인 더 더스트] · according to your [어코딩 투 유어]'
+        },
+        {
+          id: 26, stanza: 4, start: 143.4, end: 149.8,
+          en: 'I *gave* an *account* of my *ways* and you *answered* me; *teach* me your *decrees*.',
+          ko: '내가 나의 행위를 아뢰매 주께서 내게 응답하셨사오니 주의 율례들을 내게 가르치소서',
+          guide: 'gave an account [게이븐 어카운트] · answered me [앤서드 미] · teach me your [티치 미 유어]'
+        },
+        {
+          id: 27, stanza: 4, start: 149.8, end: 156.4,
+          en: '*Cause* me to *understand* the *way* of your *precepts*, that I may *meditate* on your *wonderful* *deeds*.',
+          ko: '나에게 주의 법도들의 길을 깨닫게 하여 주소서 그리하시면 내가 주의 기이한 일들을 작은 소리로 읊조리리이다',
+          guide: 'Cause me to understand [커즈미 투 언더스탠드] · that I may [대라이 메이] · meditate on [메디테이론]'
+        },
+        {
+          id: 28, stanza: 4, start: 156.4, end: 162.2,
+          en: 'My *soul* is *weary* with *sorrow*; *strengthen* me according to your *word*.',
+          ko: '나의 영혼이 눌림으로 말미암아 녹사오니 주의 말씀대로 나를 세우소서',
+          guide: 'soul is weary [소울리즈 위어리] · strengthen me [스트렝쓴 미]'
+        },
+        {
+          id: 29, stanza: 4, start: 162.2, end: 168.4,
+          en: '*Keep* me from *deceitful* *ways*; be *gracious* to me and *teach* me your *law*.',
+          ko: '거짓 행위를 내게서 떠나게 하시고 주의 법을 내게 은혜로이 베푸소서',
+          guide: 'Keep me from [킵 미 프럼] · gracious to me [그레이셔스 투 미] · teach me your [티치 미 유어]'
+        },
+        {
+          id: 30, stanza: 4, start: 168.4, end: 174.4,
+          en: 'I have *chosen* the *way* of *faithfulness*; I have *set* my *heart* on your *laws*.',
+          ko: '내가 성실한 길을 택하고 주의 규례들을 내 앞에 두었나이다',
+          guide: 'I have chosen [아이브 초즌] · set my heart on [셋 마이 하론]'
+        },
+        {
+          id: 31, stanza: 4, start: 174.4, end: 180.4,
+          en: 'I *hold* *fast* to your *statutes*, *Lord*; do *not* let me be *put* to *shame*.',
+          ko: '내가 주의 증거들에 매달렸사오니 여호와여 내가 수치를 당하지 말게 하소서',
+          guide: 'hold fast to [홀드 패스트 투] · let me be put [렛 미 비 풋]'
+        },
+        {
+          id: 32, stanza: 4, start: 180.4, end: 186.6,
+          en: 'I *run* in the *path* of your *commands*, for you have *broadened* my *understanding*.',
+          ko: '주께서 내 마음을 넓히시면 내가 주의 계명들의 길로 달려가리이다',
+          guide: 'run in the path [러닌 더 패쓰] · for you have [포 유브] · broadened my [브로드엔드 마이]'
+        },
+
+        /* ---------- Chapter 5: 5연 헤 (He ה · 33~40절) ---------- */
+        {
+          id: 33, stanza: 5, start: 186.6, end: 192.6,
+          en: '*Teach* me, *Lord*, the *way* of your *decrees*, that I may *follow* it to the *end*.',
+          ko: '여호와여 주의 율례들의 도를 내게 가르치소서 내가 끝까지 지키리이다',
+          guide: 'way of your [웨이 오브 유어] · that I may [대라이 메이] · follow it to the end [팔로우잇 투 디 엔드]'
+        },
+        {
+          id: 34, stanza: 5, start: 192.6, end: 199.0,
+          en: '*Give* me *understanding*, so that I may *keep* your *law* and *obey* it with *all* my *heart*.',
+          ko: '나로 하여금 깨닫게 하여 주소서 내가 주의 법을 준행하며 전심으로 지키리이다',
+          guide: 'so that I may [쏘 대라이 메이] · obey it with [오베이잇 윋] · all my heart [올 마이 하트]'
+        },
+        {
+          id: 35, stanza: 5, start: 199.0, end: 204.8,
+          en: '*Direct* me in the *path* of your *commands*, for *there* I *find* *delight*.',
+          ko: '나로 하여금 주의 계명들의 길로 행하게 하소서 내가 이를 즐거워함이니이다',
+          guide: 'Direct me in [다이렉트 미 인] · there I find [데어라이 파인드]'
+        },
+        {
+          id: 36, stanza: 5, start: 204.8, end: 210.8,
+          en: '*Turn* my *heart* toward your *statutes* and *not* toward *selfish* *gain*.',
+          ko: '내 마음을 주의 증거들에게 향하게 하시고 탐욕으로 향하지 말게 하소서',
+          guide: 'Turn my heart [턴 마이 하트] · toward your [토워드 유어] · and not toward [앤 낫 토워드]'
+        },
+        {
+          id: 37, stanza: 5, start: 210.8, end: 217.2,
+          en: '*Turn* my *eyes* *away* from *worthless* *things*; *preserve* my *life* according to your *word*.',
+          ko: '내 눈을 돌이켜 허탄한 것을 보지 말게 하시고 주의 길에서 나를 살아나게 하소서',
+          guide: 'eyes away from [아이저웨이 프럼] · preserve my life [프리저브 마이 라이프]'
+        },
+        {
+          id: 38, stanza: 5, start: 217.2, end: 222.8,
+          en: '*Fulfill* your *promise* to your *servant*, so that you may be *feared*.',
+          ko: '주를 경외하게 하는 주의 말씀을 주의 종에게 세우소서',
+          guide: 'Fulfill your [풀필 유어] · promise to your [프라미스 투 유어] · may be feared [메이 비 피어드]'
+        },
+        {
+          id: 39, stanza: 5, start: 222.8, end: 228.4,
+          en: '*Take* *away* the *disgrace* I *dread*, for your *laws* are *good*.',
+          ko: '내가 두려워하는 비방을 내게서 떠나게 하소서 주의 규례들은 선하심이니이다',
+          guide: 'Take away [테이커웨이] · disgrace I dread [디스그레이사이 드레드] · laws are good [로저 굿]'
+        },
+        {
+          id: 40, stanza: 5, start: 228.4, end: 234.2,
+          en: '*How* I *long* for your *precepts*! In your *righteousness* *preserve* my *life*.',
+          ko: '내가 주의 법도들을 사모하였사오니 주의 의로 나를 살아나게 하소서',
+          guide: 'How I long [하우아이 롱] · In your righteousness [인 유어 라이쳐스니스] · preserve my life [프리저브 마이 라이프]'
+        },
+
+        /* ---------- Chapter 6: 6연 바우 (Vav ו · 41~48절) [DEFAULT] ---------- */
+        {
+          id: 41, stanza: 6, start: 234.2, end: 240.8,
+          en: 'May your *unfailing* *love* *come* to me, *Lord*, your *salvation*, according to your *promise*;',
+          ko: '여호와여 주의 말씀대로 주의 인자하심과 주의 구원을 내게 임하게 하소서',
+          guide: 'unfailing love [언페일링 러브] · come to me [컴 투 미] · according to your [어코딩 투 유어]'
+        },
+        {
+          id: 42, stanza: 6, start: 240.8, end: 247.0,
+          en: 'then I can *answer* *anyone* who *taunts* me, for I *trust* in your *word*.',
+          ko: '그리하시면 내가 나를 비방하는 자들에게 대답할 말이 있사오리니 내가 주의 말씀을 의지함이니이다',
+          guide: 'then I can [데나이 캔] · answer anyone [앤서 애니원] · trust in your [트러스틴 유어]'
+        },
+        {
+          id: 43, stanza: 6, start: 247.0, end: 253.6,
+          en: '*Never* *take* your *word* of *truth* from my *mouth*, for I have *put* my *hope* in your *laws*.',
+          ko: '진리의 말씀이 내 입에서 조금도 떠나지 말게 하소서 내가 주의 규례를 바랐음이니이다',
+          guide: 'word of truth [워더브 트루쓰] · for I have [포라이브] · put my hope in [풋 마이 호핀]'
+        },
+        {
+          id: 44, stanza: 6, start: 253.6, end: 259.0,
+          en: 'I will *always* *obey* your *law*, for *ever* and *ever*.',
+          ko: '내가 주의 율법을 항상 지키리이다 영원히 지키리이다',
+          guide: 'I will always [아일 올웨이즈] · obey your law [오베이 유어 로] · ever and ever [에버랜 에버]'
+        },
+        {
+          id: 45, stanza: 6, start: 259.0, end: 264.8,
+          en: 'I will *walk* about in *freedom*, for I have *sought* *out* your *precepts*.',
+          ko: '내가 주의 법도들을 구하였사오니 자유롭게 걸어갈 것이며',
+          guide: 'walk about in [워커바우린] · for I have [포라이브] · sought out your [쏘라우츄어]'
+        },
+        {
+          id: 46, stanza: 6, start: 264.8, end: 271.2,
+          en: 'I will *speak* of your *statutes* before *kings* and will *not* be *put* to *shame*,',
+          ko: '또 왕들 앞에서 주의 교훈들을 말할 때에 수치를 당하지 아니하겠사오며',
+          guide: 'speak of your [스피커브 유어] · before kings [비포 킹즈] · put to shame [풋 투 셰임]'
+        },
+        {
+          id: 47, stanza: 6, start: 271.2, end: 276.6,
+          en: 'for I *delight* in your *commands* because I *love* them.',
+          ko: '내가 사랑하는 주의 계명들을 스스로 즐거워하며',
+          guide: 'for I delight in [포라이 딜라이틴] · because I love them [비커자이 러브뎀]'
+        },
+        {
+          id: 48, stanza: 6, start: 276.6, end: 283.2,
+          en: 'I *reach* *out* for your *commands*, which I *love*, that I may *meditate* on your *decrees*.',
+          ko: '또 내가 사랑하는 주의 계명들을 향하여 내 손을 들고 주의 율례들을 작은 소리로 읊조리리이다',
+          guide: 'reach out for [리차웃 포] · which I love [위차이 러브] · that I may [대라이 메이] · meditate on [메디테이론]'
+        },
+
+        /* ---------- Chapter 7: 7연 자인 (Zayin ז · 49~56절) ---------- */
+        {
+          id: 49, stanza: 7, start: 283.2, end: 289.0,
+          en: '*Remember* your *word* to your *servant*, for you have *given* me *hope*.',
+          ko: '주의 종에게 하신 말씀을 기억하소서 주께서 내게 소망을 가지게 하셨나이다',
+          guide: 'word to your [워드 투 유어] · for you have [포 유브] · given me hope [기븐 미 호프]'
+        },
+        {
+          id: 50, stanza: 7, start: 289.0, end: 295.0,
+          en: 'My *comfort* in my *suffering* is *this*: Your *promise* *preserves* my *life*.',
+          ko: '이 말씀은 나의 고난 중의 위로라 주의 말씀이 나를 살리셨기 때문이니이다',
+          guide: 'comfort in my [컴퍼틴 마이] · suffering is this [서퍼링이즈 디스] · preserves my life [프리저브즈 마이 라이프]'
+        },
+        {
+          id: 51, stanza: 7, start: 295.0, end: 301.2,
+          en: 'The *arrogant* *mock* me *unmercifully*, but I do *not* *turn* from your *law*.',
+          ko: '교만한 자들이 나를 심히 조롱하였어도 나는 주의 법을 떠나지 아니하였나이다',
+          guide: 'The arrogant [디 애러건트] · mock me [막 미] · but I do not [버라이 두 낫]'
+        },
+        {
+          id: 52, stanza: 7, start: 301.2, end: 307.0,
+          en: 'I *remember*, *Lord*, your *ancient* *laws*, and I *find* *comfort* in them.',
+          ko: '여호와여 주의 옛 규례들을 내가 기억하고 스스로 위로하였나이다',
+          guide: 'ancient laws [에인션트 로즈] · and I find [애나이 파인드] · comfort in them [컴퍼틴 뎀]'
+        },
+        {
+          id: 53, stanza: 7, start: 307.0, end: 313.2,
+          en: '*Indignation* *grips* me because of the *wicked*, who have *forsaken* your *law*.',
+          ko: '주의 율법을 버린 악인들로 말미암아 내가 맹렬한 분노에 사로잡혔나이다',
+          guide: 'Indignation grips [인디그네이션 그립스] · because of the [비커저브 더] · who have forsaken [후브 포세이큰]'
+        },
+        {
+          id: 54, stanza: 7, start: 313.2, end: 318.8,
+          en: 'Your *decrees* are the *theme* of my *song* *wherever* I *lodge*.',
+          ko: '내가 나그네 된 집에서 주의 율례들이 나의 노래가 되었나이다',
+          guide: 'decrees are the [디크리저 더] · theme of my song [씸 오브 마이 송] · wherever I lodge [웨어레버라이 랏지]'
+        },
+        {
+          id: 55, stanza: 7, start: 318.8, end: 324.6,
+          en: 'In the *night*, *Lord*, I *remember* your *name*, that I may *keep* your *law*.',
+          ko: '여호와여 내가 밤에 주의 이름을 기억하고 주의 법을 지켰나이다',
+          guide: 'In the night [인 더 나잇] · that I may keep [대라이 메이 킵]'
+        },
+        {
+          id: 56, stanza: 7, start: 324.6, end: 330.0,
+          en: '*This* has been my *practice*: I *obey* your *precepts*.',
+          ko: '내 소유는 이것이니 곧 주의 법도들을 지킨 것이니이다',
+          guide: 'This has been [디새즈 빈] · obey your precepts [오베이 유어 프리셉츠]'
+        },
+
+        /* ---------- Chapter 8: 8연 헤트 (Heth ח · 57~64절) ---------- */
+        {
+          id: 57, stanza: 8, start: 330.0, end: 335.6,
+          en: 'You are my *portion*, *Lord*; I have *promised* to *obey* your *words*.',
+          ko: '여호와는 나의 분깃이시니 나는 주의 말씀을 지키리라 하였나이다',
+          guide: 'You are my [유어 마이] · I have promised [아이브 프라미스트] · to obey your [투 오베이 유어]'
+        },
+        {
+          id: 58, stanza: 8, start: 335.6, end: 342.0,
+          en: 'I have *sought* your *face* with *all* my *heart*; be *gracious* to me according to your *promise*.',
+          ko: '내가 전심으로 주께 간구하였사오니 주의 말씀대로 내게 은혜를 베푸소서',
+          guide: 'I have sought [아이브 쏫] · with all my [위돌 마이] · gracious to me [그레이셔스 투 미]'
+        },
+        {
+          id: 59, stanza: 8, start: 342.0, end: 348.2,
+          en: 'I have *considered* my *ways* and have *turned* my *steps* to your *statutes*.',
+          ko: '내가 내 행위를 생각하고 주의 증거들을 향하여 내 발길을 돌이켰사오며',
+          guide: 'I have considered [아이브 컨시더드] · turned my steps to [턴드 마이 스텝스 투]'
+        },
+        {
+          id: 60, stanza: 8, start: 348.2, end: 353.6,
+          en: 'I will *hasten* and *not* *delay* to *obey* your *commands*.',
+          ko: '주의 계명들을 지키기에 신속히 하고 지체하지 아니하였나이다',
+          guide: 'I will hasten [아일 헤이슨] · not delay [낫 딜레이] · to obey your [투 오베이 유어]'
+        },
+        {
+          id: 61, stanza: 8, start: 353.6, end: 359.6,
+          en: 'Though the *wicked* *bind* me with *ropes*, I will *not* *forget* your *law*.',
+          ko: '악인들의 줄이 내게 두루 얽혔을지라도 나는 주의 법을 잊지 아니하였나이다',
+          guide: 'bind me with [바인드 미 윋] · I will not forget [아일 낫 포겟]'
+        },
+        {
+          id: 62, stanza: 8, start: 359.6, end: 365.4,
+          en: 'At *midnight* I *rise* to *give* you *thanks* for your *righteous* *laws*.',
+          ko: '내가 주의 의로운 규례들로 말미암아 밤중에 일어나 주께 감사하리이다',
+          guide: 'At midnight I [앳 미드나잇 아이] · rise to give you [라이즈 투 기뷰] · for your righteous [포 유어 라이쳐스]'
+        },
+        {
+          id: 63, stanza: 8, start: 365.4, end: 371.4,
+          en: 'I am a *friend* to *all* who *fear* you, to *all* who *follow* your *precepts*.',
+          ko: '나는 주를 경외하는 모든 자들과 주의 법도들을 지키는 자들의 친구라',
+          guide: 'I am a friend [아이머 프렌드] · to all who fear [투 올 후 피어] · follow your [팔로우 유어]'
+        },
+        {
+          id: 64, stanza: 8, start: 371.4, end: 377.0,
+          en: 'The *earth* is *filled* with your *love*, *Lord*; *teach* me your *decrees*.',
+          ko: '여호와여 주의 인자하심이 땅에 충만하였사오니 주의 율례들로 나를 가르치소서',
+          guide: 'The earth is filled [디 어씨즈 필드] · with your love [위듀어 러브] · teach me your [티치 미 유어]'
+        }
+      ];
+
+      // Normalize pron property on all default verses so both `pron` and `guide` are available
+      DEFAULT_VERSES.forEach(v => { v.pron = v.pron || v.guide; });
+
+      const OPENAI_TONE_PRESETS = {
+        actor: 'Read like a seasoned theatrical actor reciting a solemn, heartfelt psalm with natural breathing, warm resonance, and meaningful pauses.',
+        meditation: 'Read softly, peacefully, and reverently like a quiet evening meditation, with gentle warmth, unhurried pace, and reflective pauses.',
+        teacher: 'Read clearly and articulately like an expert English pronunciation coach, emphasizing stressed words naturally with crisp diction and steady rhythm.'
+      };
+
+      /* =========================================================================
+       * 2. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+       * ========================================================================= */
+      const STORAGE_KEY = 'psalm119_shadowing_studio_v3';
+      const LEGACY_STORAGE_KEY = 'psalm119_shadowing_studio_v2';
+
+      let state = {
+        verses: JSON.parse(JSON.stringify(DEFAULT_VERSES)),
+        activeStanza: 1,         // Start cleanly at Stanza 1 (1연 알레프 1~8절)
+        activeVerseId: 1,
+        audioEngine: 'ai',       // 'ai' | 'tts' | 'youtube' | 'local'
+        youtubeUrl: '',
+        stamps: {},
+        offsets: {},
+        blindEn: false,
+        blindKo: false,
+        ai: {
+          provider: 'elevenlabs', // 'elevenlabs' | 'openai'
+          elevenKey: '',
+          openaiKey: '',
+          elevenVoice: 'JBFqnCBsd6RMkjVDRZzb',
+          elevenCustomVoice: '',
+          elevenModel: 'eleven_multilingual_v2',
+          elevenStability: 0.45,
+          elevenStyle: 0.35,
+          openaiModel: 'gpt-4o-mini-tts',
+          openaiVoice: 'onyx',
+          openaiInstructions: OPENAI_TONE_PRESETS.actor,
+          speed: 1.0
+        }
+      };
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.verses) && parsed.verses.length > 0) {
+            state.verses = parsed.verses.map(v => ({ ...v, pron: v.pron || v.guide || '' }));
+          }
+          if (parsed.activeStanza !== undefined) state.activeStanza = parsed.activeStanza;
+          if (parsed.activeVerseId !== undefined && state.verses.some(v => v.id === parsed.activeVerseId)) {
+            state.activeVerseId = parsed.activeVerseId;
+          }
+          if (typeof parsed.youtubeUrl === 'string') state.youtubeUrl = parsed.youtubeUrl;
+          if (parsed.stamps && typeof parsed.stamps === 'object') state.stamps = parsed.stamps;
+          if (parsed.offsets && typeof parsed.offsets === 'object') state.offsets = parsed.offsets;
+          if (parsed.ai && typeof parsed.ai === 'object') {
+            state.ai = { ...state.ai, ...parsed.ai };
+          }
+        } catch (err) {
+          console.warn('localStorage 불러오기 실패:', err);
+        }
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            verses: state.verses,
+            activeStanza: state.activeStanza,
+            activeVerseId: state.activeVerseId,
+            youtubeUrl: state.youtubeUrl,
+            stamps: state.stamps,
+            offsets: state.offsets,
+            ai: state.ai
+          }));
+        } catch (err) {
+          console.warn('localStorage 저장 실패:', err);
+        }
+      }
+
+      /* =========================================================================
+       * 3. INDEXEDDB + MEMORY SMART AUDIO CACHE (Zero Duplicate Billing)
+       * ========================================================================= */
+      const IDB_NAME = 'Psalm119AICacheDB';
+      const IDB_STORE = 'audioBlobs';
+      let idbInstance = null;
+      const aiMemoryCache = new Map();     // cacheKey -> Blob
+      const aiObjectUrlCache = new Map();  // cacheKey -> ObjectURL
+
+      function openAudioCacheDB() {
+        return new Promise((resolve) => {
+          if (idbInstance) { resolve(idbInstance); return; }
+          if (!('indexedDB' in window)) { resolve(null); return; }
+          try {
+            const req = indexedDB.open(IDB_NAME, 1);
+            req.onupgradeneeded = (ev) => {
+              const db = ev.target.result;
+              if (!db.objectStoreNames.contains(IDB_STORE)) {
+                db.createObjectStore(IDB_STORE);
+              }
+            };
+            req.onsuccess = () => {
+              idbInstance = req.result;
+              resolve(idbInstance);
+            };
+            req.onerror = () => resolve(null);
+          } catch (e) {
+            resolve(null);
+          }
+        });
+      }
+
+      async function cacheGetBlob(key) {
+        if (aiMemoryCache.has(key)) return aiMemoryCache.get(key);
+        const db = await openAudioCacheDB();
+        if (!db) return null;
+        return new Promise((resolve) => {
+          try {
+            const tx = db.transaction(IDB_STORE, 'readonly');
+            const req = tx.objectStore(IDB_STORE).get(key);
+            req.onsuccess = () => {
+              const blob = req.result || null;
+              if (blob) aiMemoryCache.set(key, blob);
+              resolve(blob);
+            };
+            req.onerror = () => resolve(null);
+          } catch (e) {
+            resolve(null);
+          }
+        });
+      }
+
+      async function cacheSetBlob(key, blob) {
+        aiMemoryCache.set(key, blob);
+        const db = await openAudioCacheDB();
+        if (!db) return;
+        return new Promise((resolve) => {
+          try {
+            const tx = db.transaction(IDB_STORE, 'readwrite');
+            tx.objectStore(IDB_STORE).put(blob, key);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => resolve();
+          } catch (e) {
+            resolve();
+          }
+        });
+      }
+
+      async function cacheCountEntries() {
+        const db = await openAudioCacheDB();
+        if (!db) return aiMemoryCache.size;
+        return new Promise((resolve) => {
+          try {
+            const tx = db.transaction(IDB_STORE, 'readonly');
+            const req = tx.objectStore(IDB_STORE).count();
+            req.onsuccess = () => resolve(Math.max(req.result || 0, aiMemoryCache.size));
+            req.onerror = () => resolve(aiMemoryCache.size);
+          } catch (e) {
+            resolve(aiMemoryCache.size);
+          }
+        });
+      }
+
+      async function cacheClearAll() {
+        aiMemoryCache.clear();
+        aiObjectUrlCache.forEach(url => URL.revokeObjectURL(url));
+        aiObjectUrlCache.clear();
+        const db = await openAudioCacheDB();
+        if (!db) return;
+        return new Promise((resolve) => {
+          try {
+            const tx = db.transaction(IDB_STORE, 'readwrite');
+            tx.objectStore(IDB_STORE).clear();
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => resolve();
+          } catch (e) {
+            resolve();
+          }
+        });
+      }
+
+      function getEffectiveElevenVoiceId() {
+        return state.ai.elevenVoice === '__custom__'
+          ? state.ai.elevenCustomVoice.trim()
+          : state.ai.elevenVoice;
+      }
+
+      function buildAICacheKey(verseId) {
+        const p = state.ai.provider;
+        if (p === 'elevenlabs') {
+          const voiceId = getEffectiveElevenVoiceId() || 'none';
+          const settings = `${Number(state.ai.elevenStability).toFixed(2)}_${Number(state.ai.elevenStyle).toFixed(2)}`;
+          return `elevenlabs|${state.ai.elevenModel}|${voiceId}|v${verseId}|${settings}`;
+        }
+        const instr = state.ai.openaiModel === 'gpt-4o-mini-tts'
+          ? (state.ai.openaiInstructions || '').trim()
+          : 'none';
+        return `openai|${state.ai.openaiModel}|${state.ai.openaiVoice}|v${verseId}|${instr}`;
+      }
+
+      /* =========================================================================
+       * 4. DOM REFERENCES
+       * ========================================================================= */
+      const dom = {
+        overallProgressBar: document.getElementById('overallProgressBar'),
+        overallProgressText: document.getElementById('overallProgressText'),
+        overallMasteredBadge: document.getElementById('overallMasteredBadge'),
+        stanzaFilterBar: document.getElementById('stanzaFilterBar'),
+        // Engine Tabs & Panels
+        engineTabs: document.querySelectorAll('.engine-tab'),
+        enginePanels: document.querySelectorAll('.engine-panel'),
+        // Tab 1: AI Voice Controls
+        providerElevenBtn: document.getElementById('providerElevenBtn'),
+        providerOpenaiBtn: document.getElementById('providerOpenaiBtn'),
+        aiCacheStatusBadge: document.getElementById('aiCacheStatusBadge'),
+        downloadAiMp3Btn: document.getElementById('downloadAiMp3Btn'),
+        clearAiCacheBtn: document.getElementById('clearAiCacheBtn'),
+        aiCacheCountLabel: document.getElementById('aiCacheCountLabel'),
+        aiApiKeyLabel: document.getElementById('aiApiKeyLabel'),
+        apiKeySavedPill: document.getElementById('apiKeySavedPill'),
+        toggleKeyGuideBtn: document.getElementById('toggleKeyGuideBtn'),
+        apiKeyGuideBox: document.getElementById('apiKeyGuideBox'),
+        aiApiKeyInput: document.getElementById('aiApiKeyInput'),
+        toggleKeyVisibilityBtn: document.getElementById('toggleKeyVisibilityBtn'),
+        eyeIconShow: document.getElementById('eyeIconShow'),
+        eyeIconHide: document.getElementById('eyeIconHide'),
+        saveApiKeyBtn: document.getElementById('saveApiKeyBtn'),
+        deleteApiKeyBtn: document.getElementById('deleteApiKeyBtn'),
+        elevenSettingsBox: document.getElementById('elevenSettingsBox'),
+        elevenVoiceSelect: document.getElementById('elevenVoiceSelect'),
+        elevenCustomVoiceWrap: document.getElementById('elevenCustomVoiceWrap'),
+        elevenCustomVoiceInput: document.getElementById('elevenCustomVoiceInput'),
+        elevenModelSelect: document.getElementById('elevenModelSelect'),
+        elevenStabilitySlider: document.getElementById('elevenStabilitySlider'),
+        elevenStabilityVal: document.getElementById('elevenStabilityVal'),
+        elevenStyleSlider: document.getElementById('elevenStyleSlider'),
+        elevenStyleVal: document.getElementById('elevenStyleVal'),
+        openaiSettingsBox: document.getElementById('openaiSettingsBox'),
+        openaiModelSelect: document.getElementById('openaiModelSelect'),
+        openaiVoiceSelect: document.getElementById('openaiVoiceSelect'),
+        openaiInstructionsInput: document.getElementById('openaiInstructionsInput'),
+        openaiInstructionsNote: document.getElementById('openaiInstructionsNote'),
+        aiSpeedSlider: document.getElementById('aiSpeedSlider'),
+        aiSpeedLabel: document.getElementById('aiSpeedLabel'),
+        aiErrorBanner: document.getElementById('aiErrorBanner'),
+        aiErrorTitle: document.getElementById('aiErrorTitle'),
+        aiErrorDesc: document.getElementById('aiErrorDesc'),
+        fallbackToBrowserTtsBtn: document.getElementById('fallbackToBrowserTtsBtn'),
+        // Tab 2: Browser TTS
+        voiceSelect: document.getElementById('voiceSelect'),
+        ttsSpeedSlider: document.getElementById('ttsSpeedSlider'),
+        ttsSpeedLabel: document.getElementById('ttsSpeedLabel'),
+        // Tab 3: YouTube
+        youtubeUrlInput: document.getElementById('youtubeUrlInput'),
+        ytParsedBadge: document.getElementById('ytParsedBadge'),
+        openYtPopupBtn: document.getElementById('openYtPopupBtn'),
+        ytSecBadge: document.getElementById('ytSecBadge'),
+        ytFallbackLink: document.getElementById('ytFallbackLink'),
+        // Tab 4: Local Media
+        mediaDropzone: document.getElementById('mediaDropzone'),
+        mediaFileInput: document.getElementById('mediaFileInput'),
+        localFileStatus: document.getElementById('localFileStatus'),
+        localVideoEl: document.getElementById('localVideoEl'),
+        localAudioEl: document.getElementById('localAudioEl'),
+        localSpeedSlider: document.getElementById('localSpeedSlider'),
+        localSpeedLabel: document.getElementById('localSpeedLabel'),
+        startOffsetLabel: document.getElementById('startOffsetLabel'),
+        endOffsetLabel: document.getElementById('endOffsetLabel'),
+        // Main Stage
+        stageVerseBadge: document.getElementById('stageVerseBadge'),
+        stageStanzaTitle: document.getElementById('stageStanzaTitle'),
+        stageTimeBadge: document.getElementById('stageTimeBadge'),
+        toggleBlindEnBtn: document.getElementById('toggleBlindEnBtn'),
+        toggleBlindKoBtn: document.getElementById('toggleBlindKoBtn'),
+        enTextDisplay: document.getElementById('enTextDisplay'),
+        blindEnHint: document.getElementById('blindEnHint'),
+        guideTextDisplay: document.getElementById('guideTextDisplay'),
+        koTextDisplay: document.getElementById('koTextDisplay'),
+        blindKoHint: document.getElementById('blindKoHint'),
+        eqBars: document.getElementById('eqBars'),
+        pacerStatusText: document.getElementById('pacerStatusText'),
+        pacerProgressFill: document.getElementById('pacerProgressFill'),
+        pacerRepText: document.getElementById('pacerRepText'),
+        playOnceBtn: document.getElementById('playOnceBtn'),
+        playOnceLabel: document.getElementById('playOnceLabel'),
+        autoLoopBtn: document.getElementById('autoLoopBtn'),
+        autoLoopLabel: document.getElementById('autoLoopLabel'),
+        loopModeSelect: document.getElementById('loopModeSelect'),
+        prevVerseBtn: document.getElementById('prevVerseBtn'),
+        nextVerseBtn: document.getElementById('nextVerseBtn'),
+        // Stamps & Recorder
+        stampGrid: document.getElementById('stampGrid'),
+        verseStampSummary: document.getElementById('verseStampSummary'),
+        addStampBtn: document.getElementById('addStampBtn'),
+        clearVerseStampBtn: document.getElementById('clearVerseStampBtn'),
+        recordBtn: document.getElementById('recordBtn'),
+        recordBtnLabel: document.getElementById('recordBtnLabel'),
+        playRecBtn: document.getElementById('playRecBtn'),
+        compareRecBtn: document.getElementById('compareRecBtn'),
+        recTimerDisplay: document.getElementById('recTimerDisplay'),
+        recHintText: document.getElementById('recHintText'),
+        // Sidebar
+        sidebarStanzaHeading: document.getElementById('sidebarStanzaHeading'),
+        sidebarVerseCount: document.getElementById('sidebarVerseCount'),
+        stanzaProgressText: document.getElementById('stanzaProgressText'),
+        stanzaProgressBar: document.getElementById('stanzaProgressBar'),
+        verseListContainer: document.getElementById('verseListContainer'),
+        // Modals & Toast
+        openImportBtn: document.getElementById('openImportBtn'),
+        importModal: document.getElementById('importModal'),
+        closeImportModalBtn: document.getElementById('closeImportModalBtn'),
+        cancelImportModalBtn: document.getElementById('cancelImportModalBtn'),
+        modalYtUrl: document.getElementById('modalYtUrl'),
+        modalScriptArea: document.getElementById('modalScriptArea'),
+        importTargetMode: document.getElementById('importTargetMode'),
+        applyImportBtn: document.getElementById('applyImportBtn'),
+        restoreDefaultDataBtn: document.getElementById('restoreDefaultDataBtn'),
+        openResetConfirmBtn: document.getElementById('openResetConfirmBtn'),
+        resetModal: document.getElementById('resetModal'),
+        cancelResetBtn: document.getElementById('cancelResetBtn'),
+        confirmResetBtn: document.getElementById('confirmResetBtn'),
+        toastEl: document.getElementById('toastEl')
+      };
+
+      /* =========================================================================
+       * 5. UTILITY HELPERS
+       * ========================================================================= */
+      let toastTimer = null;
+      function showToast(message) {
+        dom.toastEl.textContent = message;
+        dom.toastEl.classList.remove('opacity-0', 'translate-y-3');
+        dom.toastEl.classList.add('opacity-100', 'translate-y-0');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          dom.toastEl.classList.remove('opacity-100', 'translate-y-0');
+          dom.toastEl.classList.add('opacity-0', 'translate-y-3');
+        }, 3000);
+      }
+
+      function renderHighlightedEnglish(rawEn) {
+        const escaped = rawEn
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        return escaped.replace(/\*([^*]+)\*/g, '<span class="stress-word">$1</span>');
+      }
+
+      function stripStressMarkup(rawEn) {
+        return rawEn.replace(/\*/g, '');
+      }
+
+      function getActiveVerse() {
+        return state.verses.find(v => v.id === state.activeVerseId) || state.verses[0];
+      }
+
+      function getFilteredVerses() {
+        if (state.activeStanza === 'ALL') return state.verses;
+        return state.verses.filter(v => v.stanza === state.activeStanza);
+      }
+
+      function getStanzaMeta(stanzaNum) {
+        const found = STANZAS.find(s => s.num === stanzaNum);
+        if (found) return found;
+        return { num: stanzaNum, shortLabel: '커스텀 추가', fullTitle: '커스텀 스크립트 (추가 구절)' };
+      }
+
+      function getEffectiveTimestamps(verse) {
+        const off = state.offsets[verse.id] || { start: 0, end: 0 };
+        const start = Math.max(0, Number((verse.start + off.start).toFixed(1)));
+        const end = Math.max(start + 1.0, Number((verse.end + off.end).toFixed(1)));
+        return { start, end, offset: off };
+      }
+
+      function extractYouTubeId(urlStr) {
+        if (!urlStr) return null;
+        const trimmed = urlStr.trim();
+        const patterns = [
+          /(?:youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]{11})/,
+          /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+          /(?:youtube\.com\/(?:shorts|live|embed)\/)([a-zA-Z0-9_-]{11})/
+        ];
+        for (const regex of patterns) {
+          const match = trimmed.match(regex);
+          if (match && match[1]) return match[1];
+        }
+        return null;
+      }
+
+      function buildYouTubeUrlWithTime(urlStr, startSec) {
+        const sec = Math.max(0, Math.floor(startSec));
+        const vidId = extractYouTubeId(urlStr);
+        if (vidId) return `https://www.youtube.com/watch?v=${vidId}&t=${sec}s`;
+        if (urlStr && urlStr.trim().startsWith('http')) {
+          try {
+            const u = new URL(urlStr.trim());
+            u.searchParams.set('t', `${sec}s`);
+            return u.toString();
+          } catch (e) {
+            return urlStr.trim();
+          }
+        }
+        return 'https://www.youtube.com/results?search_query=Psalm+119+NIV+Max+McLean';
+      }
+
+      /* =========================================================================
+       * 6. 4-WAY AUDIO ENGINE (AI API + BROWSER TTS + YT PACER + LOCAL MEDIA)
+       * ========================================================================= */
+      let sessionToken = 0;
+      let isPlayingOnce = false;
+      let isAutoLooping = false;
+      let pacerRafId = null;
+      let mediaWatchRafId = null;
+      let loadedVoices = [];
+      let activeLocalMedia = null;
+      let currentFetchController = null;
+      const aiAudioPlayer = new Audio();
+
+      function showAIError(title, desc) {
+        dom.aiErrorTitle.textContent = title;
+        dom.aiErrorDesc.textContent = desc;
+        dom.aiErrorBanner.classList.remove('hidden');
+      }
+
+      function hideAIError() {
+        dom.aiErrorBanner.classList.add('hidden');
+      }
+
+      async function refreshAICacheUI() {
+        const verse = getActiveVerse();
+        const key = buildAICacheKey(verse.id);
+        const blob = await cacheGetBlob(key);
+        const total = await cacheCountEntries();
+        dom.aiCacheCountLabel.textContent = `(${total})`;
+
+        if (blob) {
+          dom.aiCacheStatusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-500/15 text-emerald-300 border border-emerald-500/40';
+          dom.aiCacheStatusBadge.textContent = '⚡ 캐시됨 (추가 과금 없음)';
+          dom.downloadAiMp3Btn.disabled = false;
+        } else {
+          dom.aiCacheStatusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700';
+          dom.aiCacheStatusBadge.textContent = '☁️ 미생성 (첫 재생 시 1회 생성 후 캐시)';
+          dom.downloadAiMp3Btn.disabled = true;
+        }
+      }
+
+      function syncAIControlsUI() {
+        const isEleven = state.ai.provider === 'elevenlabs';
+
+        // Provider Toggle styling
+        dom.providerElevenBtn.className = isEleven
+          ? 'ai-provider-btn px-3.5 py-2 rounded-lg text-xs font-extrabold transition bg-indigo-500 text-white shadow'
+          : 'ai-provider-btn px-3.5 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-slate-200';
+        dom.providerOpenaiBtn.className = !isEleven
+          ? 'ai-provider-btn px-3.5 py-2 rounded-lg text-xs font-extrabold transition bg-emerald-500 text-slate-950 shadow'
+          : 'ai-provider-btn px-3.5 py-2 rounded-lg text-xs font-bold transition text-slate-400 hover:text-slate-200';
+
+        // Show/hide provider-specific panels
+        dom.elevenSettingsBox.classList.toggle('hidden', !isEleven);
+        dom.openaiSettingsBox.classList.toggle('hidden', isEleven);
+
+        // API key field synced to active provider
+        const currentKey = isEleven ? state.ai.elevenKey : state.ai.openaiKey;
+        dom.aiApiKeyLabel.childNodes[0].textContent = isEleven ? '🔑 ElevenLabs API 키 ' : '🔑 OpenAI API 키 ';
+        dom.aiApiKeyInput.placeholder = isEleven
+          ? 'sk_... (ElevenLabs API 키를 입력하세요)'
+          : 'sk-... (OpenAI API 키를 입력하세요)';
+        dom.aiApiKeyInput.value = currentKey;
+        dom.apiKeySavedPill.classList.toggle('hidden', !currentKey);
+
+        // ElevenLabs controls
+        dom.elevenVoiceSelect.value = state.ai.elevenVoice;
+        dom.elevenCustomVoiceWrap.classList.toggle('hidden', state.ai.elevenVoice !== '__custom__');
+        dom.elevenCustomVoiceInput.value = state.ai.elevenCustomVoice;
+        dom.elevenModelSelect.value = state.ai.elevenModel;
+        dom.elevenStabilitySlider.value = state.ai.elevenStability;
+        dom.elevenStabilityVal.textContent = Number(state.ai.elevenStability).toFixed(2);
+        dom.elevenStyleSlider.value = state.ai.elevenStyle;
+        dom.elevenStyleVal.textContent = Number(state.ai.elevenStyle).toFixed(2);
+
+        // OpenAI controls
+        dom.openaiModelSelect.value = state.ai.openaiModel;
+        dom.openaiVoiceSelect.value = state.ai.openaiVoice;
+        dom.openaiInstructionsInput.value = state.ai.openaiInstructions;
+        const supportsInstr = state.ai.openaiModel === 'gpt-4o-mini-tts';
+        dom.openaiInstructionsInput.disabled = !supportsInstr;
+        dom.openaiInstructionsInput.classList.toggle('opacity-45', !supportsInstr);
+        dom.openaiInstructionsNote.classList.toggle('hidden', supportsInstr);
+
+        // Speed slider
+        dom.aiSpeedSlider.value = state.ai.speed;
+        dom.aiSpeedLabel.textContent = `${Number(state.ai.speed).toFixed(2)}x`;
+
+        refreshAICacheUI();
+      }
+
+      function switchEngineTab(engineName) {
+        stopAllPlayback();
+        state.audioEngine = engineName;
+
+        dom.engineTabs.forEach(t => {
+          const active = t.dataset.engine === engineName;
+          t.className = active
+            ? 'engine-tab active flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-lg text-xs font-extrabold transition bg-indigo-500/20 text-indigo-300 border border-indigo-400/50 shadow'
+            : 'engine-tab flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition border border-transparent';
+        });
+
+        dom.enginePanels.forEach(panel => {
+          panel.classList.toggle('hidden', panel.id !== `panel-${engineName}`);
+        });
+      }
+
+      // Load Browser TTS Voices (Prioritize Edge Online Natural / Neural / Google)
+      function loadAvailableVoices() {
+        if (!('speechSynthesis' in window)) {
+          dom.voiceSelect.innerHTML = '<option value="">브라우저 TTS 미지원</option>';
+          return;
+        }
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices || voices.length === 0) return;
+
+        const englishVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+        const pool = englishVoices.length > 0 ? englishVoices : voices;
+
+        const rankVoice = (v) => {
+          const n = v.name.toLowerCase();
+          let score = 0;
+          if (n.includes('online') && n.includes('natural')) score += 90;
+          else if (n.includes('natural') || n.includes('neural')) score += 65;
+          if (n.includes('andrew') || n.includes('brian') || n.includes('ava')) score += 35;
+          if (n.includes('google us english') || n.includes('google uk english')) score += 45;
+          if (n.includes('aria') || n.includes('jenny') || n.includes('guy') || n.includes('samantha') || n.includes('daniel')) score += 25;
+          if (v.lang === 'en-US') score += 15;
+          else if (v.lang === 'en-GB') score += 12;
+          return score;
+        };
+
+        loadedVoices = [...pool].sort((a, b) => rankVoice(b) - rankVoice(a));
+
+        const prevVal = dom.voiceSelect.value;
+        dom.voiceSelect.innerHTML = '';
+        loadedVoices.forEach((voice, i) => {
+          const opt = document.createElement('option');
+          opt.value = voice.name;
+          opt.textContent = `${voice.name} (${voice.lang})`;
+          if (prevVal ? voice.name === prevVal : i === 0) opt.selected = true;
+          dom.voiceSelect.appendChild(opt);
+        });
+      }
+
+      if ('speechSynthesis' in window) {
+        loadAvailableVoices();
+        window.speechSynthesis.onvoiceschanged = loadAvailableVoices;
+      }
+
+      function setPlaybackVisuals(active, message) {
+        if (active) dom.eqBars.classList.add('active');
+        else dom.eqBars.classList.remove('active');
+        if (message) dom.pacerStatusText.textContent = message;
+      }
+
+      function stopAllPlayback(resetMessage = true) {
+        sessionToken++;
+        isPlayingOnce = false;
+        isAutoLooping = false;
+
+        if (currentFetchController) {
+          try { currentFetchController.abort(); } catch (e) {}
+          currentFetchController = null;
+        }
+        if (pacerRafId) { cancelAnimationFrame(pacerRafId); pacerRafId = null; }
+        if (mediaWatchRafId) { cancelAnimationFrame(mediaWatchRafId); mediaWatchRafId = null; }
+
+        if ('speechSynthesis' in window) {
+          try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
+
+        if (!aiAudioPlayer.paused) {
+          aiAudioPlayer.pause();
+          aiAudioPlayer.currentTime = 0;
+        }
+
+        if (activeLocalMedia && !activeLocalMedia.paused) {
+          activeLocalMedia.pause();
+        }
+
+        dom.playOnceLabel.textContent = '1회 듣기';
+        dom.autoLoopBtn.classList.remove('bg-amber-400', 'text-slate-950');
+        dom.autoLoopBtn.classList.add('bg-amber-400/15', 'text-amber-300');
+        dom.autoLoopLabel.textContent = '10회 자동 루프';
+        dom.pacerProgressFill.style.width = '0%';
+        setPlaybackVisuals(false, resetMessage ? '준비됨 · 듣기(Space) 또는 10회 자동 루프(R)를 시작하세요' : null);
+      }
+
+      // Play HTML5 Audio Blob for Ultra-HD AI Voice with live speed & progress gauge
+      function playAIObjBlob(cacheKey, blob, token) {
+        return new Promise((resolve) => {
+          if (token !== sessionToken) { resolve({ ok: true }); return; }
+
+          let url = aiObjectUrlCache.get(cacheKey);
+          if (!url) {
+            url = URL.createObjectURL(blob);
+            aiObjectUrlCache.set(cacheKey, url);
+          }
+
+          aiAudioPlayer.pause();
+          aiAudioPlayer.src = url;
+          aiAudioPlayer.currentTime = 0;
+          aiAudioPlayer.playbackRate = parseFloat(dom.aiSpeedSlider.value) || 1.0;
+
+          let settled = false;
+          const finish = (result) => {
+            if (settled) return;
+            settled = true;
+            if (mediaWatchRafId) { cancelAnimationFrame(mediaWatchRafId); mediaWatchRafId = null; }
+            aiAudioPlayer.onended = null;
+            aiAudioPlayer.onerror = null;
+            resolve(result);
+          };
+
+          aiAudioPlayer.onended = () => {
+            dom.pacerProgressFill.style.width = '100%';
+            finish({ ok: true });
+          };
+          aiAudioPlayer.onerror = () => {
+            finish({ ok: false, error: '오디오 디코딩 재생 중 오류가 발생했습니다.' });
+          };
+
+          const track = () => {
+            if (token !== sessionToken) {
+              aiAudioPlayer.pause();
+              finish({ ok: true });
+              return;
+            }
+            if (aiAudioPlayer.duration && isFinite(aiAudioPlayer.duration)) {
+              const pct = Math.min(100, (aiAudioPlayer.currentTime / aiAudioPlayer.duration) * 100);
+              dom.pacerProgressFill.style.width = `${pct}%`;
+            }
+            if (!aiAudioPlayer.paused && !aiAudioPlayer.ended) {
+              mediaWatchRafId = requestAnimationFrame(track);
+            }
+          };
+
+          const playPromise = aiAudioPlayer.play();
+          if (playPromise && typeof playPromise.then === 'function') {
+            playPromise.then(() => {
+              mediaWatchRafId = requestAnimationFrame(track);
+            }).catch((err) => {
+              finish({ ok: false, error: '브라우저 오디오 재생이 차단되었습니다. 화면을 한 번 클릭 후 다시 시도하세요.' });
+            });
+          } else {
+            mediaWatchRafId = requestAnimationFrame(track);
+          }
+        });
+      }
+
+      // Fetch or Retrieve Cached AI Voice (ElevenLabs / OpenAI)
+      async function playUltraHDAIVoice(verse, token) {
+        hideAIError();
+        const cacheKey = buildAICacheKey(verse.id);
+        let blob = await cacheGetBlob(cacheKey);
+
+        if (blob) {
+          refreshAICacheUI();
+          setPlaybackVisuals(true, `⚡ 캐시된 초고음질 AI 성우 재생 중 · 시 119:${verse.id}`);
+          return await playAIObjBlob(cacheKey, blob, token);
+        }
+
+        // Not cached yet -> validate API key and call selected API once
+        const provider = state.ai.provider;
+        const apiKey = (provider === 'elevenlabs' ? state.ai.elevenKey : state.ai.openaiKey).trim();
+        if (!apiKey) {
+          const provName = provider === 'elevenlabs' ? 'ElevenLabs' : 'OpenAI';
+          showAIError(
+            `${provName} API 키가 입력되지 않았습니다`,
+            `상단 API 키 입력창에 ${provName} 키를 저장하거나, 우측 버튼으로 무료 브라우저 자연 억양 TTS를 바로 사용해 보세요.`
+          );
+          showToast(`${provName} API 키를 먼저 입력해 주세요.`);
+          return { ok: false, aborted: false };
+        }
+
+        const cleanText = stripStressMarkup(verse.en).trim();
+        currentFetchController = new AbortController();
+        setPlaybackVisuals(true, `🎙️ ${provider === 'elevenlabs' ? 'ElevenLabs' : 'OpenAI'} 초고음질 음성 생성 중... (최초 1회)`);
+
+        try {
+          let response;
+          if (provider === 'elevenlabs') {
+            const voiceId = getEffectiveElevenVoiceId();
+            if (!voiceId) {
+              showAIError('Voice ID가 비어 있습니다', '프리셋 성우를 고르거나 직접 Voice ID를 입력해 주세요.');
+              return { ok: false };
+            }
+            response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
+              method: 'POST',
+              headers: {
+                'xi-api-key': apiKey,
+                'Content-Type': 'application/json',
+                'Accept': 'audio/mpeg'
+              },
+              body: JSON.stringify({
+                text: cleanText,
+                model_id: state.ai.elevenModel,
+                voice_settings: {
+                  stability: Number(state.ai.elevenStability),
+                  similarity_boost: 0.75,
+                  style: Number(state.ai.elevenStyle),
+                  use_speaker_boost: true
+                }
+              }),
+              signal: currentFetchController.signal
+            });
+          } else {
+            const payload = {
+              model: state.ai.openaiModel,
+              voice: state.ai.openaiVoice,
+              input: cleanText,
+              response_format: 'mp3'
+            };
+            if (state.ai.openaiModel === 'gpt-4o-mini-tts' && state.ai.openaiInstructions.trim()) {
+              payload.instructions = state.ai.openaiInstructions.trim();
+            }
+            response = await fetch('https://api.openai.com/v1/audio/speech', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload),
+              signal: currentFetchController.signal
+            });
+          }
+
+          if (!response.ok) {
+            let errDetail = '';
+            try {
+              const errJson = await response.json();
+              errDetail = errJson?.detail?.message || errJson?.error?.message || JSON.stringify(errJson);
+            } catch (e) {
+              errDetail = response.statusText || '';
+            }
+
+            let title = `API 요청 실패 (HTTP ${response.status})`;
+            let desc = errDetail || 'API 키 또는 네트워크 상태를 확인해 주세요.';
+            if (response.status === 401) {
+              title = 'API 키 인증에 실패했습니다 (401)';
+              desc = '입력하신 API 키가 올바른지 공백 없이 다시 확인해 주세요.';
+            } else if (response.status === 402 || response.status === 429) {
+              title = '크레딧 잔액 부족 또는 호출 한도 초과';
+              desc = '해당 계정의 크레딧·할당량을 확인하시거나, 무료 브라우저 TTS로 전환해 계속 연습하세요.';
+            } else if (response.status === 400 || response.status === 422) {
+              title = '요청 설정 또는 Voice ID 오류';
+              desc = errDetail || '선택한 모델이나 Voice ID가 올바른지 확인해 주세요.';
+            }
+            showAIError(title, desc);
+            showToast(title);
+            return { ok: false };
+          }
+
+          blob = await response.blob();
+          if (!blob || blob.size < 200) {
+            showAIError('유효하지 않은 오디오 응답', '서버에서 정상적인 음성 데이터를 받지 못했습니다.');
+            return { ok: false };
+          }
+
+          // Always store generated audio into Memory + IndexedDB so user never pays twice
+          await cacheSetBlob(cacheKey, blob);
+          await refreshAICacheUI();
+
+          if (token !== sessionToken) return { ok: true };
+
+          setPlaybackVisuals(true, `🎙️ AI 성우 재생 중 (자동 캐시 완료) · 시 119:${verse.id}`);
+          return await playAIObjBlob(cacheKey, blob, token);
+        } catch (err) {
+          if (err && err.name === 'AbortError') {
+            return { ok: true, aborted: true };
+          }
+          showAIError(
+            'AI 음성 서버에 연결할 수 없습니다',
+            '인터넷 연결이나 브라우저 보안(CORS) 정책을 확인해 주세요. 아래 버튼으로 무료 브라우저 TTS를 바로 사용할 수 있습니다.'
+          );
+          showToast('AI 음성 서버 연결 오류가 발생했습니다.');
+          return { ok: false };
+        } finally {
+          currentFetchController = null;
+        }
+      }
+
+      // Tab 2: Expressive Prosody Browser TTS
+      function playExpressiveTTS(verse, token) {
+        return new Promise((resolve) => {
+          if (!('speechSynthesis' in window)) {
+            showToast('이 브라우저에서는 Web Speech TTS를 지원하지 않습니다.');
+            setTimeout(() => resolve({ ok: true }), 2000);
+            return;
+          }
+
+          window.speechSynthesis.cancel();
+          const cleanText = stripStressMarkup(verse.en).trim();
+          const chunks = cleanText
+            .split(/(?<=[,;:.!?—])\s+/)
+            .map(c => c.trim())
+            .filter(Boolean);
+
+          const chosenVoice = loadedVoices.find(v => v.name === dom.voiceSelect.value) || loadedVoices[0];
+          const baseRate = parseFloat(dom.ttsSpeedSlider.value) || 0.9;
+
+          let idx = 0;
+          function speakChunk() {
+            if (token !== sessionToken) { resolve({ ok: true }); return; }
+            if (idx >= chunks.length) { resolve({ ok: true }); return; }
+
+            const phrase = chunks[idx];
+            const utter = new SpeechSynthesisUtterance(phrase);
+            if (chosenVoice) utter.voice = chosenVoice;
+            utter.lang = chosenVoice ? chosenVoice.lang : 'en-US';
+
+            const isFinal = idx === chunks.length - 1;
+            const isQuestion = phrase.endsWith('?');
+            const isExclam = phrase.endsWith('!');
+
+            utter.rate = isFinal ? Math.max(0.55, baseRate * 0.95) : Math.min(1.25, baseRate * 1.03);
+            utter.pitch = isQuestion ? 1.09 : isExclam ? 1.06 : isFinal ? 0.94 : 1.03;
+
+            dom.pacerProgressFill.style.width = `${((idx + 1) / chunks.length) * 100}%`;
+
+            utter.onend = () => {
+              idx++;
+              if (idx < chunks.length && token === sessionToken) {
+                const pauseMs = /[;:—]$/.test(phrase) ? 210 : 130;
+                setTimeout(speakChunk, pauseMs);
+              } else {
+                resolve({ ok: true });
+              }
+            };
+            utter.onerror = () => resolve({ ok: true });
+
+            try {
+              window.speechSynthesis.speak(utter);
+            } catch (err) {
+              resolve({ ok: true });
+            }
+          }
+          speakChunk();
+        });
+      }
+
+      // Tab 4: Local MP3/MP4 Exact Segment Player
+      function playLocalMediaSegment(verse, token) {
+        return new Promise((resolve) => {
+          if (!activeLocalMedia) {
+            showToast('먼저 내 MP3/MP4 파일을 불러와 주세요.');
+            resolve({ ok: false });
+            return;
+          }
+          const { start, end } = getEffectiveTimestamps(verse);
+          const rate = parseFloat(dom.localSpeedSlider.value) || 1.0;
+
+          try {
+            activeLocalMedia.playbackRate = rate;
+            activeLocalMedia.currentTime = start;
+            const p = activeLocalMedia.play();
+            if (p && typeof p.catch === 'function') {
+              p.catch(() => {
+                showToast('미디어 재생 권한을 확인해 주세요.');
+                resolve({ ok: false });
+              });
+            }
+          } catch (err) {
+            resolve({ ok: false });
+            return;
+          }
+
+          function track() {
+            if (token !== sessionToken) {
+              activeLocalMedia.pause();
+              resolve({ ok: true });
+              return;
+            }
+            const dur = Math.max(0.5, end - start);
+            const pct = Math.min(100, Math.max(0, ((activeLocalMedia.currentTime - start) / dur) * 100));
+            dom.pacerProgressFill.style.width = `${pct}%`;
+
+            if (activeLocalMedia.currentTime >= end || activeLocalMedia.ended) {
+              activeLocalMedia.pause();
+              dom.pacerProgressFill.style.width = '100%';
+              resolve({ ok: true });
+              return;
+            }
+            mediaWatchRafId = requestAnimationFrame(track);
+          }
+          mediaWatchRafId = requestAnimationFrame(track);
+        });
+      }
+
+      // Visual Countdown / Pacer Helper
+      function runVisualCountdown(durationMs, labelPrefix, token, drainReverse = false) {
+        return new Promise((resolve) => {
+          const t0 = performance.now();
+          function step(now) {
+            if (token !== sessionToken) { resolve(); return; }
+            const elapsed = now - t0;
+            const ratio = Math.min(1, elapsed / durationMs);
+            const pct = drainReverse ? (1 - ratio) * 100 : ratio * 100;
+            dom.pacerProgressFill.style.width = `${pct}%`;
+
+            const remSec = Math.max(0, (durationMs - elapsed) / 1000).toFixed(1);
+            if (labelPrefix) {
+              dom.pacerStatusText.textContent = `${labelPrefix} (${remSec}초)`;
+            }
+
+            if (ratio >= 1) resolve();
+            else pacerRafId = requestAnimationFrame(step);
+          }
+          pacerRafId = requestAnimationFrame(step);
+        });
+      }
+
+      // Unified Single-Play Dispatcher
+      async function playActiveEngineOnce(verse, token) {
+        if (state.audioEngine === 'ai') {
+          return await playUltraHDAIVoice(verse, token);
+        }
+        if (state.audioEngine === 'tts') {
+          return await playExpressiveTTS(verse, token);
+        }
+        if (state.audioEngine === 'local') {
+          return await playLocalMediaSegment(verse, token);
+        }
+        // YouTube visual pacer
+        const { start, end } = getEffectiveTimestamps(verse);
+        const durMs = Math.max(2600, (end - start) * 1000);
+        await runVisualCountdown(durMs, `유튜브 팝업 페이서 진행 · 시 119:${verse.id}`, token, false);
+        return { ok: true };
+      }
+
+      async function handlePlayOnce() {
+        if (isPlayingOnce || isAutoLooping) {
+          stopAllPlayback();
+          return;
+        }
+        const verse = getActiveVerse();
+        const myToken = ++sessionToken;
+        isPlayingOnce = true;
+        dom.playOnceLabel.textContent = '정지';
+        setPlaybackVisuals(true, `시편 119:${verse.id} 원음 재생 중...`);
+
+        await playActiveEngineOnce(verse, myToken);
+
+        if (myToken === sessionToken) {
+          stopAllPlayback();
+        }
+      }
+
+      async function handleAutoLoop10() {
+        if (isAutoLooping) {
+          stopAllPlayback();
+          return;
+        }
+        stopAllPlayback(false);
+
+        const verse = getActiveVerse();
+        if (state.audioEngine === 'local' && !activeLocalMedia) {
+          showToast('내 MP3/MP4 파일을 먼저 불러오거나 다른 오디오 탭으로 전환해 주세요.');
+          return;
+        }
+
+        const myToken = ++sessionToken;
+        isAutoLooping = true;
+        dom.autoLoopBtn.classList.remove('bg-amber-400/15', 'text-amber-300');
+        dom.autoLoopBtn.classList.add('bg-amber-400', 'text-slate-950');
+        dom.autoLoopLabel.textContent = '루프 중지';
+
+        const loopMode = dom.loopModeSelect.value; // 'repeat' | 'shadow'
+        const wordCount = stripStressMarkup(verse.en).split(/\s+/).length;
+        const speakWindowMs = Math.min(8200, Math.max(2800, wordCount * 360));
+
+        for (let rep = 1; rep <= 10; rep++) {
+          if (myToken !== sessionToken) return;
+
+          dom.pacerRepText.textContent = `${rep} / 10회`;
+          setPlaybackVisuals(true, `[${rep}/10회] 원음 듣기 · 골드 강세 단어에 집중하세요`);
+
+          const res = await playActiveEngineOnce(verse, myToken);
+          if (myToken !== sessionToken) return;
+          if (res && res.ok === false) {
+            stopAllPlayback(false);
+            dom.pacerStatusText.textContent = '오디오 오류로 10회 루프가 중단되었습니다. 상단 안내를 확인하세요.';
+            return;
+          }
+
+          if (loopMode === 'repeat') {
+            setPlaybackVisuals(false, `[${rep}/10회] 따라 말하기! 큰 소리로 억양을 모방하세요`);
+            await runVisualCountdown(speakWindowMs, `[${rep}/10회] 따라 말하기 카운트다운`, myToken, true);
+          } else {
+            setPlaybackVisuals(false, `[${rep}/10회] 호흡 간격 (0.8초)`);
+            await runVisualCountdown(800, `[${rep}/10회] 다음 반복 준비`, myToken, false);
+          }
+
+          if (myToken !== sessionToken) return;
+
+          // Auto +1 stamp upon each completed rep
+          const prevCount = state.stamps[verse.id] || 0;
+          if (prevCount < 10) {
+            state.stamps[verse.id] = prevCount + 1;
+            saveState();
+            renderStamps();
+            renderSidebarList();
+            updateProgressMeters();
+          }
+        }
+
+        if (myToken === sessionToken) {
+          showToast(`🎉 시편 119:${verse.id} 10회 쉐도잉 루프를 완료했습니다!`);
+          stopAllPlayback(false);
+          dom.pacerStatusText.textContent = `시편 119:${verse.id} 10회 자동 루프 완료! 다음 절로 이동해 보세요.`;
+          dom.pacerRepText.textContent = '10 / 10회';
+        }
+      }
+
+      /* =========================================================================
+       * 7. VOICE RECORDER & COMPARISON (MediaRecorder API)
+       * ========================================================================= */
+      let recorder = null;
+      let recChunks = [];
+      let recBlobUrl = null;
+      let recAudioObj = null;
+      let isRecording = false;
+      let recStartedAt = 0;
+      let recClockInterval = null;
+
+      function resetRecordedAudio() {
+        if (recBlobUrl) {
+          URL.revokeObjectURL(recBlobUrl);
+          recBlobUrl = null;
+        }
+        recAudioObj = null;
+        dom.playRecBtn.disabled = true;
+        dom.compareRecBtn.disabled = true;
+        dom.recTimerDisplay.textContent = '00:00';
+      }
+
+      async function handleToggleRecording() {
+        if (isRecording && recorder) {
+          recorder.stop();
+          return;
+        }
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showToast('현재 브라우저에서 마이크 녹음 기능을 지원하지 않습니다.');
+          dom.recHintText.textContent = 'HTTPS 보안 연결 또는 최신 크롬/엣지/사파리에서 이용해 주세요.';
+          return;
+        }
+
+        try {
+          stopAllPlayback();
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          recChunks = [];
+          recorder = new MediaRecorder(stream);
+
+          recorder.ondataavailable = (ev) => {
+            if (ev.data && ev.data.size > 0) recChunks.push(ev.data);
+          };
+
+          recorder.onstop = () => {
+            isRecording = false;
+            clearInterval(recClockInterval);
+            dom.recordBtn.classList.remove('bg-red-500', 'text-white', 'rec-pulsing');
+            dom.recordBtn.classList.add('bg-red-500/15', 'text-red-300');
+            dom.recordBtnLabel.textContent = '다시 녹음';
+            stream.getTracks().forEach(t => t.stop());
+
+            const blob = new Blob(recChunks, { type: 'audio/webm' });
+            if (recBlobUrl) URL.revokeObjectURL(recBlobUrl);
+            recBlobUrl = URL.createObjectURL(blob);
+            recAudioObj = new Audio(recBlobUrl);
+
+            dom.playRecBtn.disabled = false;
+            dom.compareRecBtn.disabled = false;
+            dom.recHintText.textContent = '녹음 완료! "내 발음" 또는 "원음 → 내 발음 연속 비교"를 눌러 억양을 비교하세요.';
+            showToast('내 발음이 녹음되었습니다.');
+          };
+
+          recorder.start();
+          isRecording = true;
+          recStartedAt = Date.now();
+          dom.recordBtn.classList.remove('bg-red-500/15', 'text-red-300');
+          dom.recordBtn.classList.add('bg-red-500', 'text-white', 'rec-pulsing');
+          dom.recordBtnLabel.textContent = '녹음 중지';
+          dom.recHintText.textContent = '녹음 중... 골드 강세 단어를 살려 소리 내어 읽어주세요.';
+
+          recClockInterval = setInterval(() => {
+            const sec = Math.floor((Date.now() - recStartedAt) / 1000);
+            const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+            const ss = String(sec % 60).padStart(2, '0');
+            dom.recTimerDisplay.textContent = `${mm}:${ss}`;
+          }, 250);
+        } catch (err) {
+          showToast('마이크 권한이 차단되었거나 입력 장치를 찾을 수 없습니다.');
+          dom.recHintText.textContent = '브라우저 주소창 왼쪽 설정 아이콘에서 마이크 권한을 허용해 주세요.';
+        }
+      }
+
+      function handlePlayMyRecording() {
+        if (!recAudioObj) return;
+        stopAllPlayback(false);
+        setPlaybackVisuals(true, '내 녹음 발음 재생 중...');
+        recAudioObj.currentTime = 0;
+        recAudioObj.play().catch(() => {});
+        recAudioObj.onended = () => setPlaybackVisuals(false, '내 발음 재생 완료');
+      }
+
+      async function handleCompareOriginalAndMine() {
+        if (!recAudioObj) return;
+        stopAllPlayback(false);
+        const verse = getActiveVerse();
+        const myToken = ++sessionToken;
+
+        setPlaybackVisuals(true, '1단계: 원음 재생 중...');
+        let res;
+        if (state.audioEngine === 'ai') {
+          res = await playUltraHDAIVoice(verse, myToken);
+        } else if (state.audioEngine === 'local' && activeLocalMedia) {
+          res = await playLocalMediaSegment(verse, myToken);
+        } else {
+          res = await playExpressiveTTS(verse, myToken);
+        }
+
+        if (myToken !== sessionToken || (res && res.ok === false)) return;
+        await new Promise(r => setTimeout(r, 450));
+        if (myToken !== sessionToken) return;
+
+        setPlaybackVisuals(true, '2단계: 내 녹음 발음 재생 중...');
+        recAudioObj.currentTime = 0;
+        recAudioObj.play().catch(() => {});
+        recAudioObj.onended = () => {
+          if (myToken === sessionToken) {
+            setPlaybackVisuals(false, '원음 → 내 발음 연속 비교 완료!');
+          }
+        };
+      }
+
+      /* =========================================================================
+       * 8. CUSTOM SCRIPT / TRANSCRIPT AUTO-PARSER (v.65~176 or YouTube Transcript)
+       * ========================================================================= */
+      function autoAnnotateStress(plainText) {
+        const ignoreWords = new Set([
+          'about', 'after', 'again', 'against', 'according', 'before', 'between',
+          'could', 'should', 'would', 'their', 'there', 'these', 'those', 'through',
+          'under', 'where', 'which', 'while', 'because'
+        ]);
+        return plainText.split(/\s+/).map(tok => {
+          const alpha = tok.replace(/[^a-zA-Z']/g, '').toLowerCase();
+          if (alpha.length >= 5 && !ignoreWords.has(alpha)) return `*${tok}*`;
+          return tok;
+        }).join(' ');
+      }
+
+      function autoBuildPhoneticGuide(plainText) {
+        const patterns = [
+          [/\bthat I\b/gi, 'that I [대라이]'],
+          [/\bfor I\b/gi, 'for I [포라이]'],
+          [/\bI have\b/gi, 'I have [아이브]'],
+          [/\byou have\b/gi, 'you have [유브]'],
+          [/\bwith all\b/gi, 'with all [위돌]'],
+          [/\bin the\b/gi, 'in the [인 더]'],
+          [/\bon the\b/gi, 'on the [온 더]'],
+          [/\bof your\b/gi, 'of your [어브 유어]'],
+          [/\bto your\b/gi, 'to your [투 유어]'],
+          [/\bin your\b/gi, 'in your [인 유어]']
+        ];
+        const hints = [];
+        patterns.forEach(([re, label]) => {
+          if (re.test(plainText)) hints.push(label);
+        });
+        return hints.length > 0
+          ? hints.join(' · ')
+          : '골드 하이라이트 단어를 또렷하고 길게, 전치사·관사는 약하고 부드럽게 연결해 읽으세요.';
+      }
+
+      function parseCustomInput(rawText, startIdBase, startTimeBase) {
+        const rawLines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const results = [];
+        const tsRegex = /^(\d{1,2}:)?(\d{1,2}):(\d{2})(?:\.\d+)?\s+(.*)$/;
+        const verseNumRegex = /^(\d{1,3})[.:)\s]+(.*)$/;
+
+        let cursorTime = startTimeBase;
+        let nextAutoId = startIdBase;
+
+        rawLines.forEach((line) => {
+          let customStart = null;
+          let text = line;
+          let detectedId = null;
+
+          const tsMatch = line.match(tsRegex);
+          if (tsMatch) {
+            const hrs = tsMatch[1] ? parseInt(tsMatch[1].replace(':', ''), 10) : 0;
+            const mins = parseInt(tsMatch[2], 10);
+            const secs = parseInt(tsMatch[3], 10);
+            customStart = hrs * 3600 + mins * 60 + secs;
+            text = tsMatch[4].trim();
+          } else {
+            const vMatch = line.match(verseNumRegex);
+            if (vMatch && parseInt(vMatch[1], 10) >= 1 && parseInt(vMatch[1], 10) <= 176) {
+              detectedId = parseInt(vMatch[1], 10);
+              text = vMatch[2].trim();
+            }
+          }
+
+          if (!text) return;
+
+          text = text.charAt(0).toUpperCase() + text.slice(1);
+          text = text.replace(/\bi\b/g, 'I').replace(/\blord\b/gi, 'Lord');
+          if (!/[.!?]$/.test(text)) text += '.';
+
+          const startVal = customStart !== null ? customStart : cursorTime;
+          const estDur = Math.max(4.5, Math.min(8.5, Number((text.split(/\s+/).length * 0.42).toFixed(1))));
+          const endVal = Number((startVal + estDur).toFixed(1));
+          cursorTime = endVal;
+
+          const verseId = detectedId && !results.some(r => r.id === detectedId) ? detectedId : nextAutoId++;
+          const pronText = autoBuildPhoneticGuide(text);
+
+          results.push({
+            id: verseId,
+            stanza: 99,
+            start: startVal,
+            end: endVal,
+            en: autoAnnotateStress(text),
+            ko: '(사용자 입력 구절 · 영어 가리기 및 10회 반복 루프로 체화하세요)',
+            guide: pronText,
+            pron: pronText
+          });
+        });
+
+        for (let i = 0; i < results.length - 1; i++) {
+          if (results[i + 1].start > results[i].start) {
+            results[i].end = results[i + 1].start;
+          }
+        }
+        return results;
+      }
+
+      /* =========================================================================
+       * 9. RENDERING FUNCTIONS
+       * ========================================================================= */
+      function renderStanzaFilterPills() {
+        dom.stanzaFilterBar.innerHTML = '';
+        const totalCount = state.verses.length;
+        const hasCustom = state.verses.some(v => v.stanza === 99);
+
+        const pills = [
+          { key: 'ALL', label: `전체(${totalCount})` },
+          ...STANZAS.filter(s => state.verses.some(v => v.stanza === s.num)).map(s => ({
+            key: s.num,
+            label: s.shortLabel
+          }))
+        ];
+        if (hasCustom) pills.push({ key: 99, label: '✨ 커스텀 추가' });
+
+        pills.forEach(p => {
+          const isActive = state.activeStanza === p.key;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.role = 'tab';
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          btn.className = isActive
+            ? 'shrink-0 px-3.5 py-2 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950 shadow-md shadow-amber-400/20 transition'
+            : 'shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold bg-studio-card hover:bg-studio-elevated border border-studio-border text-slate-300 hover:text-white transition';
+          btn.textContent = p.label;
+
+          btn.addEventListener('click', () => {
+            stopAllPlayback();
+            state.activeStanza = p.key;
+            const list = getFilteredVerses();
+            if (list.length > 0 && !list.some(v => v.id === state.activeVerseId)) {
+              state.activeVerseId = list[0].id;
+              resetRecordedAudio();
+            }
+            saveState();
+            renderAll();
+          });
+          dom.stanzaFilterBar.appendChild(btn);
+        });
+      }
+
+      function renderSidebarList() {
+        const list = getFilteredVerses();
+        dom.sidebarStanzaHeading.textContent = state.activeStanza === 'ALL'
+          ? `시편 119편 전체 (${state.verses.length}절)`
+          : getStanzaMeta(state.activeStanza).fullTitle;
+        dom.sidebarVerseCount.textContent = `${list.length}절`;
+
+        dom.verseListContainer.innerHTML = '';
+        list.forEach(v => {
+          const rep = state.stamps[v.id] || 0;
+          const isCurrent = v.id === state.activeVerseId;
+          const isDone = rep >= 10;
+
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.dataset.verseId = v.id;
+          item.className = isCurrent
+            ? 'w-full text-left p-3 rounded-xl bg-indigo-500/15 border border-indigo-400/50 transition flex flex-col gap-1'
+            : 'w-full text-left p-3 rounded-xl bg-studio-bg/50 hover:bg-studio-elevated border border-transparent hover:border-slate-700 transition flex flex-col gap-1';
+
+          item.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-extrabold ${isCurrent ? 'text-indigo-300' : 'text-slate-300'}">시 119:${v.id}</span>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full tabular-nums ${
+                isDone
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/35'
+                  : rep > 0
+                    ? 'bg-amber-400/15 text-amber-300'
+                    : 'bg-slate-800 text-slate-400'
+              }">${isDone ? '✓ 10/10' : `${rep}/10회`}</span>
+            </div>
+            <div class="text-xs ${isCurrent ? 'text-slate-100 font-semibold' : 'text-slate-400'} truncate">${stripStressMarkup(v.en)}</div>
+            <div class="text-[11px] text-slate-500 truncate">${v.ko}</div>
+          `;
+
+          item.addEventListener('click', () => selectVerse(v.id));
+          dom.verseListContainer.appendChild(item);
+        });
+
+        const activeBtn = dom.verseListContainer.querySelector(`[data-verse-id="${state.activeVerseId}"]`);
+        if (activeBtn) activeBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+
+      function renderStamps() {
+        const verse = getActiveVerse();
+        const count = state.stamps[verse.id] || 0;
+        dom.verseStampSummary.textContent = `${count} / 10 완료`;
+        dom.pacerRepText.textContent = `${count} / 10회`;
+
+        dom.stampGrid.innerHTML = '';
+        for (let i = 1; i <= 10; i++) {
+          const filled = i <= count;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.title = `${i}회차 스탬프 토글`;
+          btn.className = filled
+            ? 'aspect-square rounded-full bg-emerald-500 text-slate-950 font-extrabold text-xs flex items-center justify-center shadow-md shadow-emerald-500/25 hover:scale-105 transition'
+            : 'aspect-square rounded-full bg-studio-bg border border-slate-700 text-slate-500 hover:border-emerald-400 hover:text-slate-200 font-bold text-xs flex items-center justify-center transition';
+          btn.textContent = i;
+
+          btn.addEventListener('click', () => {
+            state.stamps[verse.id] = count === i ? i - 1 : i;
+            saveState();
+            renderStamps();
+            renderSidebarList();
+            updateProgressMeters();
+          });
+          dom.stampGrid.appendChild(btn);
+        }
+      }
+
+      function updateProgressMeters() {
+        const totalMax = state.verses.length * 10;
+        const totalReps = state.verses.reduce((sum, v) => sum + Math.min(10, state.stamps[v.id] || 0), 0);
+        const masteredCount = state.verses.filter(v => (state.stamps[v.id] || 0) >= 10).length;
+        const overallPct = totalMax > 0 ? Math.round((totalReps / totalMax) * 100) : 0;
+
+        dom.overallProgressBar.style.width = `${overallPct}%`;
+        dom.overallProgressText.textContent = `${overallPct}%`;
+        dom.overallMasteredBadge.textContent = `(${masteredCount}/${state.verses.length}절)`;
+
+        const filtered = getFilteredVerses();
+        const stanzaMax = filtered.length * 10;
+        const stanzaReps = filtered.reduce((sum, v) => sum + Math.min(10, state.stamps[v.id] || 0), 0);
+        const stanzaPct = stanzaMax > 0 ? Math.round((stanzaReps / stanzaMax) * 100) : 0;
+
+        dom.stanzaProgressBar.style.width = `${stanzaPct}%`;
+        dom.stanzaProgressText.textContent = `${stanzaPct}%`;
+      }
+
+      function renderMainStage() {
+        const verse = getActiveVerse();
+        const { start, end, offset } = getEffectiveTimestamps(verse);
+        const stanzaMeta = getStanzaMeta(verse.stanza);
+
+        dom.stageVerseBadge.textContent = `시편 119:${verse.id}`;
+        dom.stageStanzaTitle.textContent = stanzaMeta.fullTitle;
+        dom.stageTimeBadge.textContent = `${start.toFixed(1)}s – ${end.toFixed(1)}s`;
+
+        dom.enTextDisplay.innerHTML = renderHighlightedEnglish(verse.en);
+        dom.guideTextDisplay.textContent = verse.pron || verse.guide || '';
+        dom.koTextDisplay.textContent = verse.ko;
+
+        // Blind mode UI
+        dom.enTextDisplay.classList.toggle('blind-masked', state.blindEn);
+        dom.enTextDisplay.classList.remove('peeking');
+        dom.blindEnHint.classList.toggle('hidden', !state.blindEn);
+        dom.toggleBlindEnBtn.className = state.blindEn
+          ? 'px-3 py-1.5 rounded-full text-xs font-extrabold bg-amber-400/20 border border-amber-400/50 text-amber-300 transition flex items-center gap-1.5'
+          : 'px-3 py-1.5 rounded-full text-xs font-bold bg-studio-bg border border-slate-700 text-slate-300 hover:border-amber-400/50 transition flex items-center gap-1.5';
+
+        dom.koTextDisplay.classList.toggle('blind-masked', state.blindKo);
+        dom.koTextDisplay.classList.remove('peeking');
+        dom.blindKoHint.classList.toggle('hidden', !state.blindKo);
+        dom.toggleBlindKoBtn.className = state.blindKo
+          ? 'px-3 py-1.5 rounded-full text-xs font-extrabold bg-amber-400/20 border border-amber-400/50 text-amber-300 transition flex items-center gap-1.5'
+          : 'px-3 py-1.5 rounded-full text-xs font-bold bg-studio-bg border border-slate-700 text-slate-300 hover:border-amber-400/50 transition flex items-center gap-1.5';
+
+        // Local timestamp offsets
+        dom.startOffsetLabel.textContent = `${offset.start >= 0 ? '+' : ''}${offset.start.toFixed(1)}s`;
+        dom.endOffsetLabel.textContent = `${offset.end >= 0 ? '+' : ''}${offset.end.toFixed(1)}s`;
+
+        // YouTube link & badge
+        dom.ytSecBadge.textContent = `${Math.floor(start)}초`;
+        dom.ytFallbackLink.href = buildYouTubeUrlWithTime(state.youtubeUrl, start);
+        dom.ytParsedBadge.classList.toggle('hidden', !extractYouTubeId(state.youtubeUrl));
+
+        // Prev / Next availability
+        const filtered = getFilteredVerses();
+        const curIdx = filtered.findIndex(v => v.id === verse.id);
+        dom.prevVerseBtn.disabled = curIdx <= 0;
+        dom.nextVerseBtn.disabled = curIdx < 0 || curIdx >= filtered.length - 1;
+
+        refreshAICacheUI();
+      }
+
+      function renderAll() {
+        renderStanzaFilterPills();
+        syncAIControlsUI();
+        renderMainStage();
+        renderStamps();
+        renderSidebarList();
+        updateProgressMeters();
+      }
+
+      function selectVerse(verseId) {
+        if (!state.verses.some(v => v.id === verseId)) return;
+        stopAllPlayback();
+        resetRecordedAudio();
+        hideAIError();
+        state.activeVerseId = verseId;
+        saveState();
+        renderMainStage();
+        renderStamps();
+        renderSidebarList();
+        updateProgressMeters();
+      }
+
+      function stepVerse(delta) {
+        const filtered = getFilteredVerses();
+        const curIdx = filtered.findIndex(v => v.id === state.activeVerseId);
+        const targetIdx = curIdx + delta;
+        if (targetIdx >= 0 && targetIdx < filtered.length) {
+          selectVerse(filtered[targetIdx].id);
+        }
+      }
+
+      /* =========================================================================
+       * 10. EVENT LISTENERS & INTERACTIONS
+       * ========================================================================= */
+      // 4-Way Engine Tab Switch
+      dom.engineTabs.forEach(tab => {
+        tab.addEventListener('click', () => switchEngineTab(tab.dataset.engine));
+      });
+
+      // Fallback 1-Click Button from AI Error Banner to Free Browser TTS
+      dom.fallbackToBrowserTtsBtn.addEventListener('click', () => {
+        hideAIError();
+        switchEngineTab('tts');
+        showToast('무료 브라우저 자연 억양 TTS 엔진으로 전환했습니다.');
+      });
+
+      // AI Provider Switch (ElevenLabs vs OpenAI)
+      [dom.providerElevenBtn, dom.providerOpenaiBtn].forEach(btn => {
+        btn.addEventListener('click', () => {
+          stopAllPlayback();
+          hideAIError();
+          state.ai.provider = btn.dataset.provider;
+          saveState();
+          syncAIControlsUI();
+        });
+      });
+
+      // API Key Show/Hide, Guide Toggle, Save & Delete
+      dom.toggleKeyVisibilityBtn.addEventListener('click', () => {
+        const isMasked = dom.aiApiKeyInput.type === 'password';
+        dom.aiApiKeyInput.type = isMasked ? 'text' : 'password';
+        dom.eyeIconShow.classList.toggle('hidden', isMasked);
+        dom.eyeIconHide.classList.toggle('hidden', !isMasked);
+      });
+
+      dom.toggleKeyGuideBtn.addEventListener('click', () => {
+        const hidden = dom.apiKeyGuideBox.classList.toggle('hidden');
+        dom.toggleKeyGuideBtn.textContent = hidden ? '키 발급 방법 보기 ▾' : '키 발급 방법 닫기 ▴';
+      });
+
+      dom.saveApiKeyBtn.addEventListener('click', () => {
+        const val = dom.aiApiKeyInput.value.trim();
+        if (state.ai.provider === 'elevenlabs') state.ai.elevenKey = val;
+        else state.ai.openaiKey = val;
+        saveState();
+        hideAIError();
+        syncAIControlsUI();
+        showToast(val ? 'API 키가 브라우저에 안전하게 저장되었습니다.' : '빈 키가 저장되었습니다.');
+      });
+
+      dom.deleteApiKeyBtn.addEventListener('click', () => {
+        if (state.ai.provider === 'elevenlabs') state.ai.elevenKey = '';
+        else state.ai.openaiKey = '';
+        dom.aiApiKeyInput.value = '';
+        saveState();
+        syncAIControlsUI();
+        showToast('저장된 API 키를 삭제했습니다.');
+      });
+
+      // ElevenLabs Settings Listeners
+      dom.elevenVoiceSelect.addEventListener('change', (e) => {
+        state.ai.elevenVoice = e.target.value;
+        saveState();
+        syncAIControlsUI();
+      });
+      dom.elevenCustomVoiceInput.addEventListener('input', (e) => {
+        state.ai.elevenCustomVoice = e.target.value;
+        saveState();
+        refreshAICacheUI();
+      });
+      dom.elevenModelSelect.addEventListener('change', (e) => {
+        state.ai.elevenModel = e.target.value;
+        saveState();
+        refreshAICacheUI();
+      });
+      dom.elevenStabilitySlider.addEventListener('input', (e) => {
+        state.ai.elevenStability = parseFloat(e.target.value);
+        dom.elevenStabilityVal.textContent = state.ai.elevenStability.toFixed(2);
+        saveState();
+        refreshAICacheUI();
+      });
+      dom.elevenStyleSlider.addEventListener('input', (e) => {
+        state.ai.elevenStyle = parseFloat(e.target.value);
+        dom.elevenStyleVal.textContent = state.ai.elevenStyle.toFixed(2);
+        saveState();
+        refreshAICacheUI();
+      });
+
+      // OpenAI Settings Listeners
+      dom.openaiModelSelect.addEventListener('change', (e) => {
+        state.ai.openaiModel = e.target.value;
+        saveState();
+        syncAIControlsUI();
+      });
+      dom.openaiVoiceSelect.addEventListener('change', (e) => {
+        state.ai.openaiVoice = e.target.value;
+        saveState();
+        refreshAICacheUI();
+      });
+      dom.openaiInstructionsInput.addEventListener('input', (e) => {
+        state.ai.openaiInstructions = e.target.value;
+        saveState();
+        refreshAICacheUI();
+      });
+      document.querySelectorAll('.tone-preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const preset = OPENAI_TONE_PRESETS[btn.dataset.tone];
+          if (!preset) return;
+          state.ai.openaiInstructions = preset;
+          dom.openaiInstructionsInput.value = preset;
+          saveState();
+          refreshAICacheUI();
+          showToast(`연기 톤 프리셋(${btn.textContent.trim()})이 적용되었습니다.`);
+        });
+      });
+
+      // Live AI Playback Speed Slider (No API Re-call)
+      dom.aiSpeedSlider.addEventListener('input', (e) => {
+        const rate = parseFloat(e.target.value);
+        state.ai.speed = rate;
+        dom.aiSpeedLabel.textContent = `${rate.toFixed(2)}x`;
+        aiAudioPlayer.playbackRate = rate;
+        saveState();
+      });
+
+      // Download Cached MP3 for Current Verse
+      dom.downloadAiMp3Btn.addEventListener('click', async () => {
+        const verse = getActiveVerse();
+        const key = buildAICacheKey(verse.id);
+        const blob = await cacheGetBlob(key);
+        if (!blob) {
+          showToast('먼저 이 절을 1회 재생해 오디오를 생성해 주세요.');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const voiceTag = state.ai.provider === 'elevenlabs'
+          ? (dom.elevenVoiceSelect.options[dom.elevenVoiceSelect.selectedIndex]?.text.split(' ')[0] || 'Eleven')
+          : state.ai.openaiVoice;
+        a.download = `Psalm119_v${String(verse.id).padStart(2, '0')}_${state.ai.provider}_${voiceTag}.mp3`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        showToast(`시편 119:${verse.id} MP3 파일 다운로드를 시작합니다.`);
+      });
+
+      // Clear IndexedDB & Memory AI Audio Cache
+      dom.clearAiCacheBtn.addEventListener('click', async () => {
+        stopAllPlayback();
+        await cacheClearAll();
+        await refreshAICacheUI();
+        showToast('저장된 AI 성우 오디오 캐시를 모두 비웠습니다.');
+      });
+
+      // Tab 2 & Tab 4 Speed Sliders
+      dom.ttsSpeedSlider.addEventListener('input', (e) => {
+        dom.ttsSpeedLabel.textContent = `${parseFloat(e.target.value).toFixed(2)}x`;
+      });
+      dom.localSpeedSlider.addEventListener('input', (e) => {
+        const rate = parseFloat(e.target.value);
+        dom.localSpeedLabel.textContent = `${rate.toFixed(2)}x`;
+        if (activeLocalMedia) activeLocalMedia.playbackRate = rate;
+      });
+
+      // Tab 3: YouTube Input & Mini Popup
+      dom.youtubeUrlInput.value = state.youtubeUrl;
+      dom.youtubeUrlInput.addEventListener('input', (e) => {
+        state.youtubeUrl = e.target.value;
+        saveState();
+        const { start } = getEffectiveTimestamps(getActiveVerse());
+        dom.ytFallbackLink.href = buildYouTubeUrlWithTime(state.youtubeUrl, start);
+        dom.ytParsedBadge.classList.toggle('hidden', !extractYouTubeId(state.youtubeUrl));
+      });
+
+      dom.openYtPopupBtn.addEventListener('click', () => {
+        const { start } = getEffectiveTimestamps(getActiveVerse());
+        const targetUrl = buildYouTubeUrlWithTime(state.youtubeUrl, start);
+        const popup = window.open(targetUrl, 'psalm119YouTubePopup', 'width=520,height=340,menubar=no,toolbar=no,location=yes,resizable=yes');
+        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+          showToast('팝업이 차단되었습니다. 옆의 "새 탭 ↗" 버튼을 눌러 열어주세요.');
+        } else {
+          showToast(`유튜브 미니 팝업을 ${Math.floor(start)}초 위치에서 열었습니다.`);
+        }
+      });
+
+      // Tab 4: Local MP3/MP4 Drag & Drop
+      function attachLocalFile(file) {
+        if (!file) return;
+        stopAllPlayback();
+        const objectUrl = URL.createObjectURL(file);
+        const isVideo = file.type.startsWith('video/') || /\.(mp4|webm|mov)$/i.test(file.name);
+
+        if (isVideo) {
+          dom.localAudioEl.pause();
+          dom.localVideoEl.src = objectUrl;
+          dom.localVideoEl.classList.remove('hidden');
+          activeLocalMedia = dom.localVideoEl;
+        } else {
+          dom.localVideoEl.pause();
+          dom.localVideoEl.classList.add('hidden');
+          dom.localAudioEl.src = objectUrl;
+          activeLocalMedia = dom.localAudioEl;
+        }
+        dom.localFileStatus.textContent = `연결됨: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
+        showToast('로컬 오디오/영상 파일이 연결되었습니다.');
+      }
+
+      dom.mediaDropzone.addEventListener('click', () => dom.mediaFileInput.click());
+      dom.mediaFileInput.addEventListener('change', (e) => attachLocalFile(e.target.files[0]));
+      dom.mediaDropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dom.mediaDropzone.classList.add('border-emerald-400', 'bg-emerald-500/10');
+      });
+      dom.mediaDropzone.addEventListener('dragleave', () => {
+        dom.mediaDropzone.classList.remove('border-emerald-400', 'bg-emerald-500/10');
+      });
+      dom.mediaDropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dom.mediaDropzone.classList.remove('border-emerald-400', 'bg-emerald-500/10');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) attachLocalFile(e.dataTransfer.files[0]);
+      });
+
+      document.querySelectorAll('.nudge-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const verse = getActiveVerse();
+          const field = btn.dataset.nudge;
+          const delta = parseFloat(btn.dataset.delta);
+          if (!state.offsets[verse.id]) state.offsets[verse.id] = { start: 0, end: 0 };
+          state.offsets[verse.id][field] = Number((state.offsets[verse.id][field] + delta).toFixed(1));
+          saveState();
+          renderMainStage();
+        });
+      });
+
+      // Active Recall Blind Toggles + Touch Peek
+      dom.toggleBlindEnBtn.addEventListener('click', () => { state.blindEn = !state.blindEn; renderMainStage(); });
+      dom.toggleBlindKoBtn.addEventListener('click', () => { state.blindKo = !state.blindKo; renderMainStage(); });
+      dom.enTextDisplay.addEventListener('click', () => { if (state.blindEn) dom.enTextDisplay.classList.toggle('peeking'); });
+      dom.koTextDisplay.addEventListener('click', () => { if (state.blindKo) dom.koTextDisplay.classList.toggle('peeking'); });
+
+      // Main Playback & Navigation
+      dom.playOnceBtn.addEventListener('click', handlePlayOnce);
+      dom.autoLoopBtn.addEventListener('click', handleAutoLoop10);
+      dom.prevVerseBtn.addEventListener('click', () => stepVerse(-1));
+      dom.nextVerseBtn.addEventListener('click', () => stepVerse(1));
+
+      // Stamps
+      dom.addStampBtn.addEventListener('click', () => {
+        const verse = getActiveVerse();
+        const cur = state.stamps[verse.id] || 0;
+        if (cur < 10) {
+          state.stamps[verse.id] = cur + 1;
+          saveState();
+          renderStamps();
+          renderSidebarList();
+          updateProgressMeters();
+          if (cur + 1 === 10) showToast(`🎉 시편 119:${verse.id} 10회 마스터 달성!`);
+        } else {
+          stepVerse(1);
+        }
+      });
+
+      dom.clearVerseStampBtn.addEventListener('click', () => {
+        const verse = getActiveVerse();
+        state.stamps[verse.id] = 0;
+        saveState();
+        renderStamps();
+        renderSidebarList();
+        updateProgressMeters();
+      });
+
+      // Voice Recorder
+      dom.recordBtn.addEventListener('click', handleToggleRecording);
+      dom.playRecBtn.addEventListener('click', handlePlayMyRecording);
+      dom.compareRecBtn.addEventListener('click', handleCompareOriginalAndMine);
+
+      // Import Modal
+      function openImportModal() {
+        dom.modalYtUrl.value = state.youtubeUrl;
+        dom.importModal.classList.remove('hidden');
+      }
+      function closeImportModal() {
+        dom.importModal.classList.add('hidden');
+      }
+
+      dom.openImportBtn.addEventListener('click', openImportModal);
+      dom.closeImportModalBtn.addEventListener('click', closeImportModal);
+      dom.cancelImportModalBtn.addEventListener('click', closeImportModal);
+      dom.importModal.addEventListener('click', (e) => { if (e.target === dom.importModal) closeImportModal(); });
+
+      dom.applyImportBtn.addEventListener('click', () => {
+        const ytInput = dom.modalYtUrl.value.trim();
+        const rawScript = dom.modalScriptArea.value.trim();
+        const mode = dom.importTargetMode.value;
+
+        if (ytInput) {
+          state.youtubeUrl = ytInput;
+          dom.youtubeUrlInput.value = ytInput;
+        }
+
+        if (rawScript) {
+          const maxId = state.verses.reduce((m, v) => Math.max(m, v.id), 64);
+          const lastEnd = state.verses.length ? state.verses[state.verses.length - 1].end : 0;
+          const parsed = parseCustomInput(
+            rawScript,
+            mode === 'append' ? maxId + 1 : 1,
+            mode === 'append' ? lastEnd : 0
+          );
+
+          if (parsed.length > 0) {
+            stopAllPlayback();
+            if (mode === 'append') {
+              const existingIds = new Set(state.verses.map(v => v.id));
+              let fallbackId = maxId + 1;
+              parsed.forEach(item => {
+                if (existingIds.has(item.id)) item.id = fallbackId++;
+                existingIds.add(item.id);
+              });
+              state.verses = [...state.verses, ...parsed];
+            } else {
+              state.verses = parsed;
+            }
+            state.activeStanza = 99;
+            state.activeVerseId = parsed[0].id;
+            dom.modalScriptArea.value = '';
+            showToast(`${parsed.length}개 구절이 자동 파싱되어 로드되었습니다.`);
+          } else {
+            showToast('파싱할 수 있는 문장을 찾지 못했습니다.');
+          }
+        } else if (ytInput) {
+          showToast('유튜브 주소가 저장되었습니다.');
+        }
+
+        saveState();
+        renderAll();
+        closeImportModal();
+      });
+
+      dom.restoreDefaultDataBtn.addEventListener('click', () => {
+        stopAllPlayback();
+        state.verses = JSON.parse(JSON.stringify(DEFAULT_VERSES));
+        state.activeStanza = 1;
+        state.activeVerseId = 1;
+        saveState();
+        renderAll();
+        closeImportModal();
+        showToast('시편 119편 기본 64절(1연~8연) 데이터로 복원되었습니다.');
+      });
+
+      // Reset Confirmation Modal (No confirm())
+      dom.openResetConfirmBtn.addEventListener('click', () => dom.resetModal.classList.remove('hidden'));
+      dom.cancelResetBtn.addEventListener('click', () => dom.resetModal.classList.add('hidden'));
+      dom.resetModal.addEventListener('click', (e) => { if (e.target === dom.resetModal) dom.resetModal.classList.add('hidden'); });
+      dom.confirmResetBtn.addEventListener('click', () => {
+        stopAllPlayback();
+        state.stamps = {};
+        state.offsets = {};
+        saveState();
+        renderAll();
+        dom.resetModal.classList.add('hidden');
+        showToast('모든 학습 스탬프와 타임스탬프 오프셋이 초기화되었습니다.');
+      });
+
+      // PC Keyboard Shortcuts (Disabled when typing inside inputs)
+      document.addEventListener('keydown', (e) => {
+        const tag = (e.target && e.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+        if (!dom.importModal.classList.contains('hidden')) {
+          if (e.key === 'Escape') closeImportModal();
+          return;
+        }
+        if (!dom.resetModal.classList.contains('hidden')) {
+          if (e.key === 'Escape') dom.resetModal.classList.add('hidden');
+          return;
+        }
+
+        if (e.code === 'Space') {
+          e.preventDefault();
+          handlePlayOnce();
+        } else if (e.key === 'r' || e.key === 'R') {
+          e.preventDefault();
+          handleAutoLoop10();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          dom.addStampBtn.click();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          stepVerse(-1);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          stepVerse(1);
+        }
+      });
+
+      /* =========================================================================
+       * 11. INITIALIZE APPLICATION
+       * ========================================================================= */
+      loadState();
+      dom.youtubeUrlInput.value = state.youtubeUrl;
+      openAudioCacheDB().then(() => renderAll());
+    })();
+  </script>
+</body>
+</html>
